@@ -11,10 +11,13 @@ public class ServerController {
         return "index.html";
     }
 
+    // SOFTWARE SIZE ESTIMATION TOOL
     @GetMapping("/sizeEstimation")
     public String showSizeEstimationPage() {
         return "SizeEstimationPage.html";
     }
+
+    // MONTE CARLO ANALYSIS TOOL
 
     @GetMapping("/monteCarlo")
     public String showMonteCarloAnalysisPage() {

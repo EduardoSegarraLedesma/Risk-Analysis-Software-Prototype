@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Function Points Calculation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .section {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        td input[type="number"] {
+            width: 50px;
+            border: 1px solid #ddd;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .total-value {
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Experiment Objective</h1>
+<p>Understand the principles of the function point method for measuring the scale of software projects. Through hands-on
+    experiments, master the function point method. Students should work in groups based on the structure and components
+    of the group's "Software Engineering Management and Economics" course design project to measure the scale of the
+    project (number of function points) using the function point method. It is recommended to measure the course design
+    project using one type of function point method and to verify the results using another function point method or
+    another software scale measurement method. This experiment is a class design experiment project, requiring 1 hour
+    for the experiment and 1 hour to complete the experiment report.</p>
+
+<h2>Experiment Steps</h2>
+<h3>Step 1: Identify Data and Transaction Function Points</h3>
+<p>Data functions refer to usable logical data that is stored, referenced, and retrieved for updates. Data blocks and
+    control information are logical and user-identifiable. Data functions are divided into Internal Logical Files (ILF)
+    and External Interface Files (EIF). Transaction processing refers to operations such as external inputs, external
+    outputs, and external queries that perform updates, retrievals, and outputs, and are divided into External Inputs
+    (EI), External Outputs (EO), and External Queries (EQ). Please read the system design model provided in the document
+    carefully.</p>
+
+<h3>Step 2: Measure Internal Logical Files (ILF)</h3>
+<p>Internal Logical Files (ILF) are user-identifiable, logically related data blocks or control information maintained
+    within the application. ILFs are used to store data processed by one or more processes within the application. Once
+    a data block within an application is identified as an ILF, even if it is referenced by another transaction, it
+    cannot be considered an EIF by the same application.</p>
+<p>Experiment Operation: Count the number of ILFs in the experimental case.</p>
+
+<h3>Step 3: Measure External Interface Files (EIF)</h3>
+<p>External Interface Files (EIF) are user-identifiable, logically related data blocks or control information referenced
+    by the application under test but maintained within other applications. EIFs are used to store data referenced by
+    one or more elementary processes within the test application. Data or control data is maintained through
+    transactions such as additions, changes, updates, and an EIF can be referenced and calculated by multiple
+    applications, but for one application, an EIF should only be counted once.</p>
+<p>Experiment Operation: Count the number of EIFs in the experimental case.</p>
+
+<h3>Step 4: Calculate the Complexity of ILF and EIF</h3>
+<p>According to the IFPUG Function Point Counting Practices Manual (Version 4.1), identify the complexity of ILF and EIF
+    components and assign values (Simple, Average, or Complex) based on the parameters in the table below.</p>
+<p>Experiment Operation: 50% of the ILFs are of Simple complexity and 50% are Complex. All EIFs are Complex. Fill in the
+    table below.</p>
+
+<table>
+    <caption>ILF and EIF Complexity Evaluation Matrix</caption>
+    <tr>
+        <th rowspan="2">Record Element Types (RET)</th>
+        <th colspan="3">Data Element Types (DET)</th>
+    </tr>
+    <tr>
+        <th>1-19</th>
+        <th>20-50</th>
+        <th>&gt;50</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Low</td>
+        <td>Low</td>
+        <td>Medium</td>
+    </tr>
+    <tr>
+        <td>2-4</td>
+        <td>Low</td>
+        <td>Medium</td>
+        <td>High</td>
+    </tr>
+    <tr>
+        <td>&gt;5</td>
+        <td>Medium</td>
+        <td>High</td>
+        <td>High</td>
+    </tr>
+</table>
+
+<h2>Step Five: Measure External Inputs (EI)</h2>
+<p>
+    External Inputs (EI) are the fundamental processes of the application that handle data or control information coming
+    from outside the system's boundary. The function of an EI is to maintain one or more Internal Logical Files (ILFs)
+    and change the behavior of the system through its processing logic.
+</p>
+<p>
+    Experiment Operation: Count the number of EIs in the experimental case.
+</p>
+
+<h2>Step Six: Measure External Outputs (EO)</h2>
+<p>
+    External Outputs (EO) are the fundamental processes of the application that provide data or control information to
+    the outside of its boundary. The function of an EO is to provide the user with information that has been processed
+    beyond retrieving information or control information. The processing logic must contain at least one mathematical
+    formula or calculation, create derived data, maintain one or more ILFs, and change the behavior of the system.
+</p>
+<p>
+    Experiment Operation: Count the number of EOs in the experimental case.
+</p>
+
+<h2>Step Seven: Measure External Inquiries (EQ)</h2>
+<p>
+    External Inquiries (EQ) are the fundamental processes of the application that provide queries of data or control
+    information to the outside of its boundary. The function of an EQ is to provide information to the user by querying
+    data or control information. The processing logic does not contain mathematical formulas or calculations and does
+    not produce derived data. ILFs are not maintained during the process, and the behavior of the system is not
+    affected.
+</p>
+<p>
+    Experiment Operation: Count the number of EQs in the experimental case.
+</p>
+
+<h2>Step Eight: Calculate the Complexity of EI, EO, and EQ</h2>
+<p>
+    According to the IFPUG Counting Practices Manual (version 4.1), identify the complexity levels of the EI, EO, and EQ
+    components respectively and assign values (low, average, or high) according to the parameters of the following two
+    tables.
+</p>
+<p>
+    Experiment Operation: For EI, the number of simple complexity and high complexity each accounts for 50%. For EO, the
+    number with average complexity accounts for 2/3, and the number with high complexity accounts for 1/3. For EQ, the
+    number with low, average, and high complexity each accounts for 1/3.
+</p>
+
+<table>
+    <caption>EI Complexity Weight Table</caption>
+    <tr>
+        <th rowspan="2">Number of File Types Referenced (FTR)</th>
+        <th colspan="3">Number of Data Element Types (DET)</th>
+    </tr>
+    <tr>
+        <th>1-4</th>
+        <th>5-15</th>
+        <th>&gt;15</th>
+    </tr>
+    <tr>
+        <td>0~1</td>
+        <td>Low</td>
+        <td>Low</td>
+        <td>Average</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Low</td>
+        <td>Average</td>
+        <td>High</td>
+    </tr>
+    <tr>
+        <td>&gt;2</td>
+        <td>Average</td>
+        <td>High</td>
+        <td>High</td>
+    </tr>
+</table>
+
+<table>
+    <caption>EO and EQ Complexity Weight Table</caption>
+    <tr>
+        <th rowspan="2">Number of File Types Referenced (FTR)</th>
+        <th colspan="3">Number of Data Element Types (DET)</th>
+    </tr>
+    <tr>
+        <th>1-5</th>
+        <th>6-19</th>
+        <th>&gt;19</th>
+    </tr>
+    <tr>
+        <td>0~1</td>
+        <td>Low</td>
+        <td>Low</td>
+        <td>Average</td>
+    </tr>
+    <tr>
+        <td>2~3</td>
+        <td>Low</td>
+        <td>Average</td>
+        <td>High</td>
+    </tr>
+    <tr>
+        <td>&gt;3</td>
+        <td>Average</td>
+        <td>High</td>
+        <td>High</td>
+    </tr>
+</table>
+
+<h2>Function Point Complexity Weight Calculation</h2>
+
+<p>According to IFPUG's Function Point Counting Practices Manual (Version 4.1), the complexity level of ILF and EIF
+    components should be identified and assigned a value (simple, average, or complex).</p>
+
+<p>Note: According to IFPUG's Function Point Counting Practices Manual, this is a simplification of the process of
+    function point counting.</p>
+
+<table>
+    <caption>Complexity Weight Calculation Table for Function Points</caption>
+    <tr>
+        <th>Component</th>
+        <th>Simple</th>
+        <th>Average</th>
+        <th>Complex</th>
+    </tr>
+    <tr>
+        <td>ILF</td>
+        <td>X7</td>
+        <td>X10</td>
+        <td>X15</td>
+    </tr>
+    <tr>
+        <td>EIF</td>
+        <td>X5</td>
+        <td>X7</td>
+        <td>X10</td>
+    </tr>
+    <tr>
+        <td>EI</td>
+        <td>X3</td>
+        <td>X4</td>
+        <td>X6</td>
+    </tr>
+    <tr>
+        <td>EO</td>
+        <td>X4</td>
+        <td>X5</td>
+        <td>X7</td>
+    </tr>
+    <tr>
+        <td>EQ</td>
+        <td>X3</td>
+        <td>X4</td>
+        <td>X6</td>
+    </tr>
+</table>
+
+<h2>Unadjusted Function Points Calculation Table</h2>
+
+<div class="section">
+    <table id="ufpTable">
+        <tr>
+            <th>Type</th>
+            <th>Simple Weight</th>
+            <th>Simple Count</th>
+            <th>Simple Total</th>
+            <th>Average Weight</th>
+            <th>Average Count</th>
+            <th>Average Total</th>
+            <th>Complex Weight</th>
+            <th>Complex Count</th>
+            <th>Complex Total</th>
+            <th>Sum of Totals</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>A</th>
+            <th>B</th>
+            <th>C = A * B</th>
+            <th>D</th>
+            <th>E</th>
+            <th>F = D * E</th>
+            <th>G</th>
+            <th>H</th>
+            <th>I = G * H</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td>EI</td>
+            <td>3</td>
+            <td><input type="number" min="0" id="countEI_Simple" value="0"></td>
+            <td id="totalEI_Simple">0</td>
+            <td>4</td>
+            <td><input type="number" min="0" id="countEI_Average" value="0"></td>
+            <td id="totalEI_Average">0</td>
+            <td>6</td>
+            <td><input type="number" min="0" id="countEI_Complex" value="0"></td>
+            <td id="totalEI_Complex">0</td>
+            <td id="sumEI">0</td>
+        </tr>
+        <tr>
+            <td>EO</td>
+            <td>4</td>
+            <td><input type="number" min="0" id="countEO_Simple" value="0"></td>
+            <td id="totalEO_Simple">0</td>
+            <td>5</td>
+            <td><input type="number" min="0" id="countEO_Average" value="0"></td>
+            <td id="totalEO_Average">0</td>
+            <td>7</td>
+            <td><input type="number" min="0" id="countEO_Complex" value="0"></td>
+            <td id="totalEO_Complex">0</td>
+            <td id="sumEO">0</td>
+        </tr>
+        <tr>
+            <td>EQ</td>
+            <td>3</td>
+            <td><input type="number" min="0" id="countEQ_Simple" value="0"></td>
+            <td id="totalEQ_Simple">0</td>
+            <td>4</td>
+            <td><input type="number" min="0" id="countEQ_Average" value="0"></td>
+            <td id="totalEQ_Average">0</td>
+            <td>6</td>
+            <td><input type="number" min="0" id="countEQ_Complex" value="0"></td>
+            <td id="totalEQ_Complex">0</td>
+            <td id="sumEQ">0</td>
+        </tr>
+        <tr>
+            <td>EIF</td>
+            <td>5</td>
+            <td><input type="number" min="0" id="countEIF_Simple" value="0"></td>
+            <td id="totalEIF_Simple">0</td>
+            <td>7</td>
+            <td><input type="number" min="0" id="countEIF_Average" value="0"></td>
+            <td id="totalEIF_Average">0</td>
+            <td>10</td>
+            <td><input type="number" min="0" id="countEIF_Complex" value="0"></td>
+            <td id="totalEIF_Complex">0</td>
+            <td id="sumEIF">0</td>
+        </tr>
+        <tr>
+            <td>ILF</td>
+            <td>7</td>
+            <td><input type="number" min="0" id="countILF_Simple" value="0"></td>
+            <td id="totalILF_Simple">0</td>
+            <td>10</td>
+            <td><input type="number" min="0" id="countILF_Average" value="0"></td>
+            <td id="totalILF_Average">0</td>
+            <td>15</td>
+            <td><input type="number" min="0" id="countILF_Complex" value="0"></td>
+            <td id="totalILF_Complex">0</td>
+            <td id="sumILF">0</td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <div class="total-line">
+        <span>Total Unadjusted Function Points: </span>
+        <span  class="total-value" id="totalUFP">0</span>
+    </div>
+</div>
+
+<h2>System Characterisation Factor and Calculation Table</h2>
+<div class="section">
+    <table id="characteristicsTable">
+        <tr>
+            <th>#</th>
+            <th>Characteristic</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Requirement for reliable backup and recovery</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Requirement for data communication</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Extent of distributed processing</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Performance requirements</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Expected operational environment</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>Extent of online data entries</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>Extent of multi-screen or multi-operation online data input</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>Extent of online updating of master files</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td>Extent of complex inputs, outputs, online queries and files</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>10</td>
+            <td>Extent of complex data processing</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>11</td>
+            <td>Extent that currently developed code can be designed for reuse</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>12</td>
+            <td>Extent of conversion and installation included in the design</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>13</td>
+            <td>Extent of multiple installations in an organization and variety of customer organizations</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>14</td>
+            <td>Extent of change and focus on ease of use</td>
+            <td>
+                <select class="value-input">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th colspan="2">Total</th>
+            <th id="totalValue">0</th>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <div class="total-line">
+        <span>Function Point Adjustment Factor (VAF):</span>
+        <span class="total-value" id="VAF">0.65</span>
+    </div>
+    <div class="total-line">
+        <span>Function Points for this Experimental Case:</span>
+        <span class="total-value" id="functionPoints">0.00</span>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const weights = {
+            'EI': {'Simple': 3, 'Average': 4, 'Complex': 6},
+            'EO': {'Simple': 4, 'Average': 5, 'Complex': 7},
+            'EQ': {'Simple': 3, 'Average': 4, 'Complex': 6},
+            'EIF': {'Simple': 5, 'Average': 7, 'Complex': 10},
+            'ILF': {'Simple': 7, 'Average': 10, 'Complex': 15}
+        };
+
+        function recalculateValues() {
+            let totalUFP = 0;
+            ['EI', 'EO', 'EQ', 'EIF', 'ILF'].forEach(type => {
+                let typeTotal = 0;
+                ['Simple', 'Average', 'Complex'].forEach(complexity => {
+                    const inputId = `count${type}_${complexity}`;
+                    const count = parseInt(document.getElementById(inputId).value, 10) || 0;
+                    const total = count * weights[type][complexity];
+                    document.getElementById(`total${type}_${complexity}`).textContent = total;
+                    typeTotal += total;
+                });
+                document.getElementById(`sum${type}`).textContent = typeTotal;
+                totalUFP += typeTotal;
+            });
+
+            document.getElementById('totalUFP').textContent = totalUFP;
+
+            let totalGSC = 0;
+            document.querySelectorAll('.value-input').forEach(select => {
+                totalGSC += parseInt(select.value, 10);
+            });
+            document.getElementById('totalValue').textContent = totalGSC;
+
+            const VAF = 0.65 + (0.01 * totalGSC);
+            document.getElementById('VAF').textContent = VAF.toFixed(2);
+            const functionPoints = VAF * totalUFP;
+            document.getElementById('functionPoints').textContent = functionPoints.toFixed(2);
+        }
+
+        // Bind change events to dropdowns and input changes to recalculate on user interaction
+        document.querySelectorAll('.value-input').forEach(select => {
+            select.addEventListener('change', recalculateValues);
+        });
+
+        document.querySelectorAll('#ufpTable input[type="number"]').forEach(input => {
+            input.addEventListener('input', recalculateValues);
+        });
+
+        // Perform initial calculation to populate values based on defaults
+        recalculateValues();
+    });
+</script>
+
+</body>
+</html>
