@@ -33,7 +33,7 @@
         th, td {
             border: 1px solid #ddd;
             padding: 8px;
-            text-align: left;
+            text-align: center;
         }
 
         th {
@@ -57,18 +57,42 @@
             font-weight: bold;
         }
 
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 10px;
-            border-top: 1px solid #eee;
+        .tab {
+            margin-left: 15px;
         }
+
+        .tab2 {
+            margin-left: 30px;
+        }
+
+        .btn-container {
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
     </style>
 </head>
 <body>
 
-<h1>Experiment Objective</h1>
-<p>Understand the principles of the function point method for measuring the scale of software projects. Through hands-on
+<h1>I. Experiment Objective</h1>
+<p class="tab">Understand the principles of the function point method for measuring the scale of software projects.
+    Through hands-on
     experiments, master the function point method. Students should work in groups based on the structure and components
     of the group's "Software Engineering Management and Economics" course design project to measure the scale of the
     project (number of function points) using the function point method. It is recommended to measure the course design
@@ -76,38 +100,43 @@
     another software scale measurement method. This experiment is a class design experiment project, requiring 1 hour
     for the experiment and 1 hour to complete the experiment report.</p>
 
-<h2>Experiment Steps</h2>
-<h3>Step 1: Identify Data and Transaction Function Points</h3>
-<p>Data functions refer to usable logical data that is stored, referenced, and retrieved for updates. Data blocks and
+<h1>II. Experiment Steps</h1>
+<h3 class="tab">Step 1: Identify Data and Transaction Function Points</h3>
+<p class="tab2">Data functions refer to usable logical data that is stored, referenced, and retrieved for updates. Data
+    blocks and
     control information are logical and user-identifiable. Data functions are divided into Internal Logical Files (ILF)
     and External Interface Files (EIF). Transaction processing refers to operations such as external inputs, external
     outputs, and external queries that perform updates, retrievals, and outputs, and are divided into External Inputs
     (EI), External Outputs (EO), and External Queries (EQ). Please read the system design model provided in the document
     carefully.</p>
 
-<h3>Step 2: Measure Internal Logical Files (ILF)</h3>
-<p>Internal Logical Files (ILF) are user-identifiable, logically related data blocks or control information maintained
+<h3 class="tab">Step 2: Measure Internal Logical Files (ILF)</h3>
+<p class="tab2">Internal Logical Files (ILF) are user-identifiable, logically related data blocks or control information
+    maintained
     within the application. ILFs are used to store data processed by one or more processes within the application. Once
     a data block within an application is identified as an ILF, even if it is referenced by another transaction, it
     cannot be considered an EIF by the same application.</p>
-<p>Experiment Operation: Count the number of ILFs in the experimental case.</p>
+<p class="tab2">Experiment Operation: Count the number of ILFs in the experimental case.</p>
 
-<h3>Step 3: Measure External Interface Files (EIF)</h3>
-<p>External Interface Files (EIF) are user-identifiable, logically related data blocks or control information referenced
+<h3 class="tab">Step 3: Measure External Interface Files (EIF)</h3>
+<p class="tab2">External Interface Files (EIF) are user-identifiable, logically related data blocks or control
+    information referenced
     by the application under test but maintained within other applications. EIFs are used to store data referenced by
     one or more elementary processes within the test application. Data or control data is maintained through
     transactions such as additions, changes, updates, and an EIF can be referenced and calculated by multiple
     applications, but for one application, an EIF should only be counted once.</p>
-<p>Experiment Operation: Count the number of EIFs in the experimental case.</p>
+<p class="tab2">Experiment Operation: Count the number of EIFs in the experimental case.</p>
 
-<h3>Step 4: Calculate the Complexity of ILF and EIF</h3>
-<p>According to the IFPUG Function Point Counting Practices Manual (Version 4.1), identify the complexity of ILF and EIF
+<h3 class="tab">Step 4: Calculate the Complexity of ILF and EIF</h3>
+<p class="tab2">According to the IFPUG Function Point Counting Practices Manual (Version 4.1), identify the complexity
+    of ILF and EIF
     components and assign values (Simple, Average, or Complex) based on the parameters in the table below.</p>
-<p>Experiment Operation: 50% of the ILFs are of Simple complexity and 50% are Complex. All EIFs are Complex. Fill in the
+<p class="tab2">Experiment Operation: 50% of the ILFs are of Simple complexity and 50% are Complex. All EIFs are
+    Complex. Fill in the
     table below.</p>
 
 <table>
-    <caption>ILF and EIF Complexity Evaluation Matrix</caption>
+    <caption><h4>ILF and EIF Complexity Evaluation Matrix</h4></caption>
     <tr>
         <th rowspan="2">Record Element Types (RET)</th>
         <th colspan="3">Data Element Types (DET)</th>
@@ -137,53 +166,53 @@
     </tr>
 </table>
 
-<h2>Step Five: Measure External Inputs (EI)</h2>
-<p>
+<h3 class="tab">Step 5: Measure External Inputs (EI)</h3>
+<p class="tab2">
     External Inputs (EI) are the fundamental processes of the application that handle data or control information coming
     from outside the system's boundary. The function of an EI is to maintain one or more Internal Logical Files (ILFs)
     and change the behavior of the system through its processing logic.
 </p>
-<p>
+<p class="tab2">
     Experiment Operation: Count the number of EIs in the experimental case.
 </p>
 
-<h2>Step Six: Measure External Outputs (EO)</h2>
-<p>
+<h3 class="tab">Step 6: Measure External Outputs (EO)</h3>
+<p class="tab2">
     External Outputs (EO) are the fundamental processes of the application that provide data or control information to
     the outside of its boundary. The function of an EO is to provide the user with information that has been processed
     beyond retrieving information or control information. The processing logic must contain at least one mathematical
     formula or calculation, create derived data, maintain one or more ILFs, and change the behavior of the system.
 </p>
-<p>
+<p class="tab2">
     Experiment Operation: Count the number of EOs in the experimental case.
 </p>
 
-<h2>Step Seven: Measure External Inquiries (EQ)</h2>
-<p>
+<h3 class="tab">Step 7: Measure External Inquiries (EQ)</h3>
+<p class="tab2">
     External Inquiries (EQ) are the fundamental processes of the application that provide queries of data or control
     information to the outside of its boundary. The function of an EQ is to provide information to the user by querying
     data or control information. The processing logic does not contain mathematical formulas or calculations and does
     not produce derived data. ILFs are not maintained during the process, and the behavior of the system is not
     affected.
 </p>
-<p>
+<p class="tab2">
     Experiment Operation: Count the number of EQs in the experimental case.
 </p>
 
-<h2>Step Eight: Calculate the Complexity of EI, EO, and EQ</h2>
-<p>
+<h3 class="tab">Step 8: Calculate the Complexity of EI, EO, and EQ</h3>
+<p class="tab2">
     According to the IFPUG Counting Practices Manual (version 4.1), identify the complexity levels of the EI, EO, and EQ
     components respectively and assign values (low, average, or high) according to the parameters of the following two
     tables.
 </p>
-<p>
+<p class="tab2">
     Experiment Operation: For EI, the number of simple complexity and high complexity each accounts for 50%. For EO, the
     number with average complexity accounts for 2/3, and the number with high complexity accounts for 1/3. For EQ, the
     number with low, average, and high complexity each accounts for 1/3.
 </p>
 
 <table>
-    <caption>EI Complexity Weight Table</caption>
+    <caption><h4>EI Complexity Weight Table</h4></caption>
     <tr>
         <th rowspan="2">Number of File Types Referenced (FTR)</th>
         <th colspan="3">Number of Data Element Types (DET)</th>
@@ -214,7 +243,7 @@
 </table>
 
 <table>
-    <caption>EO and EQ Complexity Weight Table</caption>
+    <caption><h4>EO and EQ Complexity Weight Table</h4></caption>
     <tr>
         <th rowspan="2">Number of File Types Referenced (FTR)</th>
         <th colspan="3">Number of Data Element Types (DET)</th>
@@ -244,16 +273,24 @@
     </tr>
 </table>
 
-<h2>Function Point Complexity Weight Calculation</h2>
+<h3 class="tab">Step 9: Calculate Unadjusted Function Points (UFP)</h3>
+<p class="tab2">According to the IFPUG Counting Practices Manual (version 4.1), calculate the Unadjusted Function Points
+    (UFP).</p>
+<p class="tab2">Experiment operation: Fill in the appropriate data obtained in the previous steps into the "Unadjusted
+    Function
+    Points Calculation Table" below to calculate the UFP for this case study.</p>
 
-<p>According to IFPUG's Function Point Counting Practices Manual (Version 4.1), the complexity level of ILF and EIF
-    components should be identified and assigned a value (simple, average, or complex).</p>
-
-<p>Note: According to IFPUG's Function Point Counting Practices Manual, this is a simplification of the process of
-    function point counting.</p>
+<h3 class="tab">Step 10: Calculate Adjusted Function Points</h3>
+<p class="tab2">Considering the non-functional characteristics of this case study, collect the relative complexity
+    adjustment factors
+    from table 6 (highlighted in red), to obtain the Function Point Adjustment Factor (VAF) for this case study as 41.
+    Insert the VAF value into the (IFPUG method) function point calculation formula to obtain the function points for
+    this case study as _______________.</p>
+<p class="tab2">Experiment operation: Use the IFPUG standard rules to calculate the adjusted function points for the
+    case study.</p>
 
 <table>
-    <caption>Complexity Weight Calculation Table for Function Points</caption>
+    <caption><h4>Complexity Weight Calculation Table for Function Points</h4></caption>
     <tr>
         <th>Component</th>
         <th>Simple</th>
@@ -292,24 +329,28 @@
     </tr>
 </table>
 
-<h2>Unadjusted Function Points Calculation Table</h2>
+<h1>III. Experimental parameters</h1>
+
 
 <div class="section">
     <table id="ufpTable">
+        <caption><h2>Table 1: Calculation of unadjusted function points</h2></caption>
         <tr>
-            <th>Type</th>
-            <th>Simple Weight</th>
+            <th>Component</th>
+            <th>Number of Components</th>
             <th>Simple Count</th>
+            <th>Simple Weight</th>
             <th>Simple Total</th>
-            <th>Average Weight</th>
             <th>Average Count</th>
+            <th>Average Weight</th>
             <th>Average Total</th>
-            <th>Complex Weight</th>
             <th>Complex Count</th>
+            <th>Complex Weight</th>
             <th>Complex Total</th>
             <th>Sum of Totals</th>
         </tr>
         <tr>
+            <th></th>
             <th></th>
             <th>A</th>
             <th>B</th>
@@ -320,70 +361,75 @@
             <th>G</th>
             <th>H</th>
             <th>I = G * H</th>
-            <th></th>
+            <th>J = C + F + I</th>
         </tr>
         <tr>
             <td>EI</td>
-            <td>3</td>
+            <td id="totalEI">0</td>
             <td><input type="number" min="0" id="countEI_Simple" value="0"></td>
+            <td>3</td>
             <td id="totalEI_Simple">0</td>
-            <td>4</td>
             <td><input type="number" min="0" id="countEI_Average" value="0"></td>
+            <td>4</td>
             <td id="totalEI_Average">0</td>
-            <td>6</td>
             <td><input type="number" min="0" id="countEI_Complex" value="0"></td>
+            <td>6</td>
             <td id="totalEI_Complex">0</td>
             <td id="sumEI">0</td>
         </tr>
         <tr>
             <td>EO</td>
-            <td>4</td>
+            <td id="totalEO">0</td>
             <td><input type="number" min="0" id="countEO_Simple" value="0"></td>
+            <td>4</td>
             <td id="totalEO_Simple">0</td>
-            <td>5</td>
             <td><input type="number" min="0" id="countEO_Average" value="0"></td>
+            <td>5</td>
             <td id="totalEO_Average">0</td>
-            <td>7</td>
             <td><input type="number" min="0" id="countEO_Complex" value="0"></td>
+            <td>7</td>
             <td id="totalEO_Complex">0</td>
             <td id="sumEO">0</td>
         </tr>
         <tr>
             <td>EQ</td>
-            <td>3</td>
+            <td id="totalEQ">0</td>
             <td><input type="number" min="0" id="countEQ_Simple" value="0"></td>
+            <td>3</td>
             <td id="totalEQ_Simple">0</td>
-            <td>4</td>
             <td><input type="number" min="0" id="countEQ_Average" value="0"></td>
+            <td>4</td>
             <td id="totalEQ_Average">0</td>
-            <td>6</td>
             <td><input type="number" min="0" id="countEQ_Complex" value="0"></td>
+            <td>6</td>
             <td id="totalEQ_Complex">0</td>
             <td id="sumEQ">0</td>
         </tr>
         <tr>
             <td>EIF</td>
-            <td>5</td>
+            <td id="totalEIF">0</td>
             <td><input type="number" min="0" id="countEIF_Simple" value="0"></td>
+            <td>5</td>
             <td id="totalEIF_Simple">0</td>
-            <td>7</td>
             <td><input type="number" min="0" id="countEIF_Average" value="0"></td>
+            <td>7</td>
             <td id="totalEIF_Average">0</td>
-            <td>10</td>
             <td><input type="number" min="0" id="countEIF_Complex" value="0"></td>
+            <td>10</td>
             <td id="totalEIF_Complex">0</td>
             <td id="sumEIF">0</td>
         </tr>
         <tr>
             <td>ILF</td>
-            <td>7</td>
+            <td id="totalILF">0</td>
             <td><input type="number" min="0" id="countILF_Simple" value="0"></td>
+            <td>7</td>
             <td id="totalILF_Simple">0</td>
-            <td>10</td>
             <td><input type="number" min="0" id="countILF_Average" value="0"></td>
+            <td>10</td>
             <td id="totalILF_Average">0</td>
-            <td>15</td>
             <td><input type="number" min="0" id="countILF_Complex" value="0"></td>
+            <td>15</td>
             <td id="totalILF_Complex">0</td>
             <td id="sumILF">0</td>
         </tr>
@@ -393,17 +439,16 @@
 <div class="section">
     <div class="total-line">
         <span>Total Unadjusted Function Points: </span>
-        <span  class="total-value" id="totalUFP">0</span>
+        <span class="total-value" id="totalUFP">0</span>
     </div>
 </div>
-
-<h2>System Characterisation Factor and Calculation Table</h2>
 <div class="section">
     <table id="characteristicsTable">
+        <caption><h2>Table 2: Table of system characterisation factors and calculations</h2></caption>
         <tr>
             <th>#</th>
-            <th>Characteristic</th>
-            <th>Value</th>
+            <th>Characteristics</th>
+            <th>Values</th>
         </tr>
         <tr>
             <td>1</td>
@@ -619,6 +664,10 @@
     </div>
 </div>
 
+<div class="btn-container">
+    <a href="/" class="btn">Go back to Index</a>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const weights = {
@@ -633,13 +682,16 @@
             let totalUFP = 0;
             ['EI', 'EO', 'EQ', 'EIF', 'ILF'].forEach(type => {
                 let typeTotal = 0;
+                let componentTotal = 0;
                 ['Simple', 'Average', 'Complex'].forEach(complexity => {
                     const inputId = `count${type}_${complexity}`;
                     const count = parseInt(document.getElementById(inputId).value, 10) || 0;
                     const total = count * weights[type][complexity];
                     document.getElementById(`total${type}_${complexity}`).textContent = total;
                     typeTotal += total;
+                    componentTotal += count;
                 });
+                document.getElementById(`total${type}`).textContent = componentTotal;
                 document.getElementById(`sum${type}`).textContent = typeTotal;
                 totalUFP += typeTotal;
             });
