@@ -2,6 +2,8 @@ package com.example.riskanalysissoftwareprototype.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class ServerController {
@@ -22,5 +24,11 @@ public class ServerController {
     @GetMapping("/monteCarlo")
     public String showMonteCarloAnalysisPage() {
         return "MonteCarloAnalysisPage.html";
+    }
+
+    @PostMapping("/saveSchedule")
+    public String saveSchedule(@RequestBody String data) {
+
+        return "Data Saved Successfully";
     }
 }

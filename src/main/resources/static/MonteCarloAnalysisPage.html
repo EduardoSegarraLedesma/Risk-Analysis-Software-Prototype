@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Function Points Calculation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .section {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        td input[type="number"] {
+            width: 50px;
+            border: 1px solid #ddd;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .tab {
+            margin-left: 15px;
+        }
+
+        .tab2 {
+            margin-left: 30px;
+        }
+
+        .btn-container {
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>I. Purpose of the experiment</h1>
+<p class="tab">This experiment uses Monte Carlo simulation method to quantitatively analyse the risk of the project,
+    through simulating a large number of experiments and statistics of the experimental results, and ultimately derive
+    the probability and cumulative probability distribution chart, to help rationally plan the project schedule.</p>
+<h1>II. Principle of the experiment</h1>
+<p class="tab">Monte Carlo simulation is a mathematical method based on random sampling for modelling and assessing
+    uncertainty and risk. In software risk assessment, Monte Carlo simulation can be used to model the potential impacts
+    of different risk factors and to estimate possible risk levels and probability distributions. The method works by
+    generating a large number of random samples and statistically analysing the results based on these samples to
+    provide a quantitative assessment of risk.
+</p>
+<h1>III. Content of the experiment</h1>
+<h3 class="tab">1. Determining risk factors:</h3>
+<p class="tab2">Firstly, it is necessary to determine the risk factors to the software development project. This
+    experiment mainly considers the project schedule risk.
+</p>
+<h3 class="tab">2. Determine the probability distribution: </h3>
+<p class="tab2">For each risk factor, its possible probability distribution needs to be determined. This can be
+    determined from historical data, expert opinion or other relevant information.
+</p>
+<h3 class="tab">3. Parameter estimation: </h3>
+<p class="tab2">For the probability distribution of each risk factor, its parameters, such as mean and variance, need to
+    be estimated. These parameters will be used to generate random samples.
+</p>
+<h3 class="tab">4. Random sample generation: </h3>
+<p class="tab2">Using the determined probability distributions and parameters, a large number of random samples will be
+    generated. These samples will simulate possible scenarios for different risk factors.
+</p>
+<h3 class="tab">5. Risk Assessment: </h3>
+<p class="tab2">For each random sample, assess the magnitude and impact of the risk by simulating the potential outcomes
+    of the software development project. Statistical metrics such as mean, standard deviation, percentile, etc. can be
+    used to measure risk.
+</p>
+<h3 class="tab">6. Analysis of results: </h3>
+<p class="tab2">The large number of samples generated are statistically analysed to derive probability distributions and
+    key indicators of risk. These results can be used for decision making, risk management and project planning.
+</p>
+<h1>IV. Experimental Steps</h1>
+<h3 class="tab"> Step 1: Determine the mean duration, standard deviation and estimated duration</h3>
+<p class="tab2">Assume that the software project has three WBS elements, namely design, build and test. Assuming that
+    the probability
+    distribution of the estimated durations for each of the three WBS elements follows a standard normal distribution,
+    fill in the mean duration, standard deviation, and the most pessimistic, most probable, and most optimistic
+    estimated durations for each of the three WBS elements.
+</p>
+<p class="tab2">Experiment: Fill in the table with the mean duration, standard deviation, and the most pessimistic,
+    probable, and
+    optimistic estimates for the project.
+</p>
+<div class="section">
+    <table id="scheduleTable">
+        <caption><h2>Estimated schedule of work</h2></caption>
+        <tr>
+            <th></th>
+            <th>Most Optimistic</th>
+            <th>Most Likely</th>
+            <th>Most Pessimistic</th>
+            <th>Mean Duration</th>
+            <th>Standard Deviation</th>
+            <th>Distribution</th>
+        </tr>
+        <tr>
+            <td>Design</td>
+            <td><input type="number" id="DesignOpt" value="0"></td>
+            <td><input type="number" id="DesignLik" value="0"></td>
+            <td><input type="number" id="DesignPes" value="0"></td>
+            <td><input type="number" id="DesignMea" value="0"></td>
+            <td><input type="number" id="DesignDev" value="0"></td>
+            <td>
+                <select class="value-input" id="DesignDis">
+                    <option value="Normal">Normal</option>
+                    <option value="Poisson">Poisson</option>
+                    <option value="Even">Even</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Development</td>
+            <td><input type="number" id="DevelopmentOpt" value="0"></td>
+            <td><input type="number" id="DevelopmentLik" value="0"></td>
+            <td><input type="number" id="DevelopmentPes" value="0"></td>
+            <td><input type="number" id="DevelopmentMea" value="0"></td>
+            <td><input type="number" id="DevelopmentDev" value="0"></td>
+            <td>
+                <select class="value-input" id="DevelopmentDis">
+                    <option value="Normal">Normal</option>
+                    <option value="Poisson">Poisson</option>
+                    <option value="Even">Even</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Testing</td>
+            <td><input type="number" id="TestingOpt" value="0"></td>
+            <td><input type="number" id="TestingLik" value="0"></td>
+            <td><input type="number" id="TestingPes" value="0"></td>
+            <td><input type="number" id="TestingMea" value="0"></td>
+            <td><input type="number" id="TestingDev" value="0"></td>
+            <td>
+                <select class="value-input" id="TestingDis">
+                    <option value="Normal">Normal</option>
+                    <option value="Poisson">Poisson</option>
+                    <option value="Even">Even</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</div>
+<button id="submitDataBtn" type="button">Submit Data</button>
+
+
+<div class="btn-container">
+    <a href="/" class="btn">Go back to Index</a>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    $(document).ready(function () {
+        $('#submitDataBtn').click(function () {
+            // Gather data from your form inputs
+            var data = {
+                design: {
+                    optimistic: document.getElementById('DesignOpt').value,
+                    likely: document.getElementById('DesignLik').value,
+                    pessimistic: document.getElementById('DesignPes').value,
+                    mean: document.getElementById('DesignMea').value,
+                    stdDeviation: document.getElementById('DesignDev').value,
+                    distribution: document.getElementById('DesignDis').value
+                },
+                development: {
+                    optimistic: document.getElementById('DevelopmentOpt').value,
+                    likely: document.getElementById('DevelopmentLik').value,
+                    pessimistic: document.getElementById('DevelopmentPes').value,
+                    mean: document.getElementById('DevelopmentMea').value,
+                    stdDeviation: document.getElementById('DevelopmentDev').value,
+                    distribution: document.getElementById('DevelopmentDis').value
+                },
+                testing: {
+                    optimistic: document.getElementById('TestingOpt').value,
+                    likely: document.getElementById('TestingLik').value,
+                    pessimistic: document.getElementById('TestingPes').value,
+                    mean: document.getElementById('TestingMea').value,
+                    stdDeviation: document.getElementById('TestingDev').value,
+                    distribution: document.getElementById('TestingDis').value
+                }
+            };
+
+            // Send the data using AJAX
+            $.ajax({
+                url: '/saveSchedule',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data), // Convert data to JSON string
+                success: function (response) {
+                    // Handle success - do something with the response if needed
+                    console.log('Data submitted successfully:', response);
+                    // Optionally, alert the user or update the UI to indicate success
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors - alert the user or log the error
+                    console.error('An error occurred:', error);
+                    // Optionally, alert the user or update the UI to indicate failure
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
