@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class ServerController {
 
+    MonteCarloController monteCarloControler = MonteCarloController.getInstance();
+
     @GetMapping("/")
     public String showIndexPage() {
         return "index.html";
@@ -28,7 +30,6 @@ public class ServerController {
 
     @PostMapping("/saveSchedule")
     public String saveSchedule(@RequestBody String data) {
-
-        return "Data Saved Successfully";
+        return monteCarloControler.ParseData(data);
     }
 }
