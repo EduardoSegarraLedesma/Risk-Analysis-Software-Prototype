@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class ServerController {
 
-    MonteCarloController monteCarloControler = MonteCarloController.getInstance();
+    MonteCarloController monteCarloController = MonteCarloController.getInstance();
 
     @GetMapping("/")
     public String showIndexPage() {
@@ -16,6 +16,7 @@ public class ServerController {
     }
 
     // SOFTWARE SIZE ESTIMATION TOOL
+
     @GetMapping("/sizeEstimation")
     public String showSizeEstimationPage() {
         return "SizeEstimationPage.html";
@@ -30,6 +31,6 @@ public class ServerController {
 
     @PostMapping("/saveSchedule")
     public String saveSchedule(@RequestBody String data) {
-        return monteCarloControler.ParseData(data);
+        return monteCarloController.ParseData(data);
     }
 }
