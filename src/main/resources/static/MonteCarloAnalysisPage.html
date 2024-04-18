@@ -119,9 +119,10 @@
 </p>
 <h1>IV. Experimental Steps</h1>
 <h3 class="tab"> Step 1: Determine the mean duration, standard deviation and estimated duration</h3>
-<p class="tab2">Assume that the software project has three WBS elements, namely design, build and test. Assuming that
-    the probability
-    distribution of the estimated durations for each of the three WBS elements follows a standard normal distribution,
+<p class="tab2">Assume that the software project has three WBS elements, namely design, development and testing.
+    Assuming that
+    the probability distribution of the estimated durations for each of the three WBS elements follows a standard normal
+    distribution,
     fill in the mean duration, standard deviation, and the most pessimistic, most probable, and most optimistic
     estimated durations for each of the three WBS elements.
 </p>
@@ -129,7 +130,20 @@
     probable, and
     optimistic estimates for the project.
 </p>
+<p class="tab2">
+    Note: For the distributions to work properly the next needs to be followed
+</p>
+<p class="tab2">
+    * Most Optimistic ≤ Most Likely ≤ Most Pessimistic
+</p>
+<p class="tab2">
+    * Mean Duration > 0
+</p>
+<p class="tab2">
+    * Standard Deviation > 0
+</p>
 <div class="section">
+    <button id="submitDataBtn" type="button">Save Data</button>
     <table id="scheduleTable">
         <caption><h2>Estimated schedule of work</h2></caption>
         <tr>
@@ -143,84 +157,154 @@
         </tr>
         <tr>
             <td>Design</td>
-            <td><input type="number" id="DesignOpt" value="0"></td>
-            <td><input type="number" id="DesignLik" value="0"></td>
-            <td><input type="number" id="DesignPes" value="0"></td>
-            <td><input type="number" id="DesignMea" value="0"></td>
-            <td><input type="number" id="DesignDev" value="0"></td>
+            <td><input type="number" id="DesignOpt" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
+            <td><input type="number" id="DesignLik" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
+            <td><input type="number" id="DesignPes" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
+            <td><input type="number" id="DesignMea" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
+            <td><input type="number" id="DesignDev" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
             <td>
                 <select class="value-input" id="DesignDis">
                     <option value="Normal">Normal</option>
-                    <option value="Poisson">Poisson</option>
+                    <option value="Triangular">Triangular</option>
                     <option value="Even">Even</option>
                 </select>
             </td>
         </tr>
         <tr>
             <td>Development</td>
-            <td><input type="number" id="DevelopmentOpt" value="0"></td>
-            <td><input type="number" id="DevelopmentLik" value="0"></td>
-            <td><input type="number" id="DevelopmentPes" value="0"></td>
-            <td><input type="number" id="DevelopmentMea" value="0"></td>
-            <td><input type="number" id="DevelopmentDev" value="0"></td>
+            <td><input type="number" id="DevelopmentOpt" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
+            <td><input type="number" id="DevelopmentLik" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
+            <td><input type="number" id="DevelopmentPes" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
+            <td><input type="number" id="DevelopmentMea" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
+            <td><input type="number" id="DevelopmentDev" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
             <td>
                 <select class="value-input" id="DevelopmentDis">
                     <option value="Normal">Normal</option>
-                    <option value="Poisson">Poisson</option>
+                    <option value="Triangular">Triangular</option>
                     <option value="Even">Even</option>
                 </select>
             </td>
         </tr>
         <tr>
             <td>Testing</td>
-            <td><input type="number" id="TestingOpt" value="0"></td>
-            <td><input type="number" id="TestingLik" value="0"></td>
-            <td><input type="number" id="TestingPes" value="0"></td>
-            <td><input type="number" id="TestingMea" value="0"></td>
-            <td><input type="number" id="TestingDev" value="0"></td>
+            <td><input type="number" id="TestingOpt" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
+            <td><input type="number" id="TestingLik" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
+            <td><input type="number" id="TestingPes" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
+            <td><input type="number" id="TestingMea" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
+            <td><input type="number" id="TestingDev" value="0" min="0"
+                       oninput="this.value = Math.max(0, parseInt(this.value))"></td>
             <td>
                 <select class="value-input" id="TestingDis">
                     <option value="Normal">Normal</option>
-                    <option value="Poisson">Poisson</option>
+                    <option value="Triangular">Triangular</option>
                     <option value="Even">Even</option>
                 </select>
             </td>
         </tr>
     </table>
 </div>
-<button id="submitDataBtn" type="button">Save Data</button>
+
+<h3 class="tab"> Step 2: Plot the Normal Distribution of Project Durations</h3>
+<p class="tab2">Input the distribution of durations for the three Work Breakdown Structure (WBS) elements to simulate
+    the overall project duration probability distribution chart. Since the design, construction, and testing elements
+    all follow a standard normal distribution, the normal distribution graph of the three elements' durations can be
+    approximately drawn based on their respective means and standard deviations listed in the table above.
+    Operational Step: Draw the probability distribution graph for the three phases of the duration.
+</p>
+
+<h3 class="tab"> Step 3: Randomly Generate Duration Values</h3>
+<p class="tab2">Monte Carlo simulation quantitatively analyzes the project duration risk of the entire project schedule,
+    which can be simulated using a computer. It is necessary to randomly generate 400 duration values for each WBS
+    element, where these duration values satisfy the specified mean and standard deviation of the normal distribution.
+    After the simulation, a total of 400*3=1200 normally distributed random duration values are obtained, and the total
+    duration of the three elements combined is calculated.
+</p>
+<p class="tab2">
+    Operational Step: Randomly generate the duration values for each element and calculate the total duration.
+</p>
+
+<div class="section">
+    <button id="simulateButton">Run Simulation</button>
+    <div class="scrollable-table">
+        <table id="resultsTable">
+            <caption><h2> Random duration values</h2></caption>
+            <thead>
+            <tr>
+                <th>Design</th>
+                <th>Development</th>
+                <th>Testing</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Results will be appended here -->
+            </tbody>
+        </table>
+    </div>
+    <div id="pagination">
+        <!-- Pagination buttons will be appended here -->
+    </div>
+    <div>
+        <p>Minimum Total Duration: <span id="minDuration"></span></p>
+        <p>Maximum Total Duration: <span id="maxDuration"></span></p>
+    </div>
+</div>
+
+<h3 class="tab">Step 4: Statistical probability and cumulative probability distribution of total duration</h3>
+<p class="tab2">Calculate the minimum and maximum values of the total duration as a range, and count the probability and
+    cumulative probability of each value of the total duration within the range.
+</p>
+
+<p class="tab2">
+    Experimental operation: count the probability and cumulative probability of the total duration values
+</p>
 
 <div class="btn-container">
     <a href="/" class="btn">Go back to Index</a>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
     $(document).ready(function () {
         $('#submitDataBtn').click(function () {
             // Gather data from your form inputs
             var data = {
                 design: {
-                    optimistic: document.getElementById('DesignOpt').value,
-                    likely: document.getElementById('DesignLik').value,
-                    pessimistic: document.getElementById('DesignPes').value,
-                    mean: document.getElementById('DesignMea').value,
-                    stdDeviation: document.getElementById('DesignDev').value,
-                    distribution: document.getElementById('DesignDis').value
+                    optimistic: $('#DesignOpt').val(),
+                    likely: $('#DesignLik').val(),
+                    pessimistic: $('#DesignPes').val(),
+                    mean: $('#DesignMea').val(),
+                    stdDeviation: $('#DesignDev').val(),
+                    distribution: $('#DesignDis').val()
                 },
                 development: {
-                    optimistic: document.getElementById('DevelopmentOpt').value,
-                    likely: document.getElementById('DevelopmentLik').value,
-                    pessimistic: document.getElementById('DevelopmentPes').value,
-                    mean: document.getElementById('DevelopmentMea').value,
-                    stdDeviation: document.getElementById('DevelopmentDev').value,
-                    distribution: document.getElementById('DevelopmentDis').value
+                    optimistic: $('#DevelopmentOpt').val(),
+                    likely: $('#DevelopmentLik').val(),
+                    pessimistic: $('#DevelopmentPes').val(),
+                    mean: $('#DevelopmentMea').val(),
+                    stdDeviation: $('#DevelopmentDev').val(),
+                    distribution: $('#DevelopmentDis').val()
                 },
                 testing: {
-                    optimistic: document.getElementById('TestingOpt').value,
-                    likely: document.getElementById('TestingLik').value,
-                    pessimistic: document.getElementById('TestingPes').value,
-                    mean: document.getElementById('TestingMea').value,
-                    stdDeviation: document.getElementById('TestingDev').value,
-                    distribution: document.getElementById('TestingDis').value
+                    optimistic: $('#TestingOpt').val(),
+                    likely: $('#TestingLik').val(),
+                    pessimistic: $('#TestingPes').val(),
+                    mean: $('#TestingMea').val(),
+                    stdDeviation: $('#TestingDev').val(),
+                    distribution: $('#TestingDis').val()
                 }
             };
 
@@ -229,21 +313,78 @@
                 url: '/saveSchedule',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify(data), // Convert data to JSON string
+                data: JSON.stringify(data),
                 success: function (response) {
-                    // Handle success - do something with the response if needed
                     console.log('Data submitted successfully:', response);
-                    // Optionally, alert the user or update the UI to indicate success
+                    alert('Success: ' + response.message);  // Display success message from the server
                 },
                 error: function (xhr, status, error) {
-                    // Handle errors - alert the user or log the error
                     console.error('An error occurred:', error);
-                    // Optionally, alert the user or update the UI to indicate failure
+                    alert('Failed to save data. \n Error: ' + error);  // Alert the user on error
                 }
             });
+
+            var globalData = [];
+            var resultsPerPage = 25;
+            var totalPages = 0;
+
+
+            $('#simulateButton').click(function () {
+                $.ajax({
+                    url: '/simulateMonteCarlo',
+                    type: 'GET',
+                    dataType: 'json',  // Expecting JSON data in response
+                    success: function (response) {
+                        globalData = response.data;
+                        displayResults(1);  // Assume this function correctly handles your data
+                        displaySummary(response.minDuration, response.maxDuration);
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error fetching simulation data: ' + error);
+                    }
+                });
+            });
+
+            function displayResults(page) {
+                var pageData = paginateData(globalData, page, resultsPerPage);
+                renderTable(pageData); // Render the current page's data
+                renderPagination(page, totalPages); // Render pagination buttons
+            }
+
+            function paginateData(data, page, perPage) {
+                var offset = (page - 1) * perPage;
+                totalPages = Math.ceil(data.length / perPage); // Recalculate total pages every call
+                return data.slice(offset, offset + perPage);
+            }
+
+            function renderTable(data) {
+                $('#resultsTable tbody').empty(); // Clear previous results
+                data.forEach(function (row) {
+                    var html = `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td></tr>`;
+                    $('#resultsTable tbody').append(html);
+                });
+            }
+
+            function renderPagination(currentPage, numPages) {
+                $('#pagination').empty(); // Clear existing pagination buttons
+                for (let i = 1; i <= numPages; i++) {
+                    const button = $('<button>').text(i);
+                    if (i === currentPage) {
+                        button.prop('disabled', true); // Disable current page button
+                    }
+                    button.on('click', function () {
+                        displayResults(i);
+                    });
+                    $('#pagination').append(button);
+                }
+            }
+
+            function displaySummary(minDuration, maxDuration) {
+                $('#minDuration').text(minDuration);
+                $('#maxDuration').text(maxDuration);
+            }
         });
     });
 </script>
-
 </body>
 </html>

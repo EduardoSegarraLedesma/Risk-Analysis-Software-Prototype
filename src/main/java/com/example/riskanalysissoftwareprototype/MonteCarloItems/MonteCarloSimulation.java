@@ -2,12 +2,12 @@ package com.example.riskanalysissoftwareprototype.MonteCarloItems;
 
 public class MonteCarloSimulation {
 
-    private int mOptimistic;
-    private int mLikely;
+    protected int mOptimistic;
+    protected int mLikely;
 
-    private int mPessimistic;
-    private int mDuration;
-    private int sDeviation;
+    protected int mPessimistic;
+    protected int mDuration;
+    protected int sDeviation;
 
     public MonteCarloSimulation(int mOptimistic, int mLikely, int mPessimistic, int mDuration, int sDeviation) {
         this.mOptimistic = mOptimistic;

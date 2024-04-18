@@ -11,7 +11,12 @@ public class MonteCarloController {
     private IMonteCarloSimulation development;
     private IMonteCarloSimulation testing;
 
+    private int[][] simulation;
+    private int maxDuration;
+    private int minDuration;
+
     private MonteCarloController() {
+
     }
 
     public static MonteCarloController getInstance() {
@@ -24,15 +29,48 @@ public class MonteCarloController {
         try {
             JSONObject jsonData = new JSONObject(data);
             this.design = parseDistributions(jsonData.getJSONObject("design"));
-            this.development = parseDistributions(jsonData.getJSONObject("testing"));
-            this.testing = parseDistributions(jsonData.getJSONObject("development"));
+            this.development = parseDistributions(jsonData.getJSONObject("development"));
+            this.testing = parseDistributions(jsonData.getJSONObject("testing"));
             return "Saved";
         } catch (JSONException e) {
-            return "Failure to Save";
+            return "Error in input data";
         }
     }
 
+    public int[][] doSimulation() {
+        minDuration = Integer.MAX_VALUE;
+        maxDuration = Integer.MIN_VALUE;
+        cleanSimulationArray();
+        for (int i = 0; i < simulation.length; i++) {
+            int total = 0;
+            simulation[i][0] = design.doDistribution();
+            total += simulation[i][0];
+            simulation[i][1] = development.doDistribution();
+            total += simulation[i][1];
+            simulation[i][2] = testing.doDistribution();
+            total += simulation[i][2];
+            simulation[i][3] = total;
+            if (total > maxDuration)
+                maxDuration = total;
+            else if (total < minDuration)
+                minDuration = total;
+        }
+        return simulation;
+    }
+
+    public int getMaxDuration() {
+        return maxDuration;
+    }
+
+    public int getMinDuration() {
+        return minDuration;
+    }
+
     //SUPPORT METHODS
+
+    private void cleanSimulationArray() {
+        simulation = new int[400][4];
+    }
 
     private IMonteCarloSimulation parseDistributions(JSONObject data) {
         int opt = Integer.parseInt(data.getString("optimistic"));
@@ -42,7 +80,7 @@ public class MonteCarloController {
         int dev = Integer.parseInt(data.getString("stdDeviation"));
         return switch (data.getString("distribution")) {
             case "Normal" -> new NormalSimulation(opt, lik, pes, mea, dev);
-            case "Poisson" -> new PoissonSimulation(opt, lik, pes, mea, dev);
+            case "Triangular" -> new TriangularSimulation(opt, lik, pes, mea, dev);
             case "Even" -> new EvenSimulation(opt, lik, pes, mea, dev);
             default -> throw new JSONException("Data Failure");
         };

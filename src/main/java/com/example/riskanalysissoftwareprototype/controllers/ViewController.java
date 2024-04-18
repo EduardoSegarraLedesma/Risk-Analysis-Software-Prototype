@@ -2,13 +2,9 @@ package com.example.riskanalysissoftwareprototype.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
-public class ServerController {
-
-    MonteCarloController monteCarloController = MonteCarloController.getInstance();
+public class ViewController {
 
     @GetMapping("/")
     public String showIndexPage() {
@@ -29,8 +25,5 @@ public class ServerController {
         return "MonteCarloAnalysisPage.html";
     }
 
-    @PostMapping("/saveSchedule")
-    public String saveSchedule(@RequestBody String data) {
-        return monteCarloController.ParseData(data);
-    }
+
 }
