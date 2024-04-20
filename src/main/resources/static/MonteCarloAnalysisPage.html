@@ -7,10 +7,15 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f8f8f8;
             margin: 0;
             padding: 20px;
+            color: #333;
+        }
+
+        h1, h2, h3, h4 {
+            color: #0A2463; /* Dark Blue */
         }
 
         .section {
@@ -18,12 +23,7 @@
             margin: 10px 0;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .section h2 {
-            color: #333;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+            border: 1px solid #0A2463; /* Dark Blue */
         }
 
         table {
@@ -33,13 +33,16 @@
         }
 
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #0A2463; /* Dark Blue */
             padding: 8px;
             text-align: center;
+            background-color: #FFFFFF; /* White */
+            color: #333;
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #0A2463; /* Dark Blue */
+            color: #FFFFFF; /* White */
         }
 
         td input[type="number"] {
@@ -47,6 +50,17 @@
             border: 1px solid #ddd;
             padding: 5px;
             text-align: center;
+        }
+
+        select {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .total-value {
+            font-weight: bold;
+            color: #0A2463; /* Dark Blue */
         }
 
         .tab {
@@ -67,7 +81,7 @@
             margin: 0 10px;
             text-decoration: none;
             color: #fff;
-            background-color: #007bff;
+            background-color: #0A2463; /* Dark Blue */
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -75,15 +89,11 @@
         }
 
         .btn:hover {
-            background-color: #0056b3;
+            background-color: #073A6B; /* A slightly darker blue */
         }
 
         .centered-text {
-            text-align: center;
-        }
-
-        .total-value {
-            font-weight: bold;
+            alignment: center;
         }
 
     </style>
@@ -336,9 +346,11 @@
 <h1>V. Experimental results</h1>
 
 <div>
-    <p class="tab">Minimum allowable 30% risk of not completing the project on time is allowed and the project is planned to be
+    <p class="tab">Minimum allowable 30% risk of not completing the project on time is allowed and the project is
+        planned to be
         completed within <span id="daysFor30Risk" class="total-value">X</span> days.</p>
-    <p class="tab">Minimum allowable 15% risk of not completing the project on time is allowed and the project is planned to be
+    <p class="tab">Minimum allowable 15% risk of not completing the project on time is allowed and the project is
+        planned to be
         completed within <span id="daysFor15Risk" class="total-value">X</span> days.</p>
     <button id="fetchDeadlineData">Calculate Project Deadlines</button>
 </div>

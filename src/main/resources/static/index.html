@@ -4,13 +4,16 @@
     <title>Risk Analysis DEMO</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             text-align: center;
             margin-top: 50px;
+            color: #333;
+            background-color: #f8f8f8; /* Light gray background */
+            position: relative; /* Reference for absolute positioning */
         }
 
         h1 {
-            color: #333;
+            color: #0A2463; /* Dark Blue */
         }
 
         .group-info {
@@ -28,7 +31,7 @@
             margin: 0 10px;
             text-decoration: none;
             color: #fff;
-            background-color: #007bff;
+            background-color: #0A2463; /* Dark Blue */
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -36,7 +39,15 @@
         }
 
         .btn:hover {
-            background-color: #0056b3;
+            background-color: #073A6B; /* A slightly darker blue */
+        }
+
+        .logo-image {
+            width: 300px;
+            height: auto;
+            display: block;
+            margin: 0 auto; /* Center the image horizontally */
+            margin-top: 50px;
         }
     </style>
 </head>
@@ -51,5 +62,7 @@
     <a href="/sizeEstimation" class="btn">Software Size Estimation Tool</a>
     <a href="/monteCarlo" class="btn">Monte Carlo Analysis Tool</a>
 </div>
+
+<img src="TongjiLogo.png" alt="Tongjilogo" class="logo-image">
 </body>
 </html>
