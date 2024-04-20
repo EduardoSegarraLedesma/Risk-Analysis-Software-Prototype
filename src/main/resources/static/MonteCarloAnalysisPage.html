@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Function Points Calculation</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -145,7 +147,7 @@
 <div class="section">
     <button id="submitDataBtn" type="button">Save Data</button>
     <table id="scheduleTable">
-        <caption><h2>Estimated schedule of work</h2></caption>
+        <caption><h2>Estimated Schedule of Work</h2></caption>
         <tr>
             <th></th>
             <th>Most Optimistic</th>
@@ -241,7 +243,7 @@
     <button id="simulateButton">Run Simulation</button>
     <div class="scrollable-table">
         <table id="resultsTable">
-            <caption><h2> Random duration values</h2></caption>
+            <caption><h2> Random Duration Values</h2></caption>
             <thead>
             <tr>
                 <th>Design</th>
@@ -273,10 +275,60 @@
     Experimental operation: count the probability and cumulative probability of the total duration values
 </p>
 
+<div class="section">
+    <button id="simulateButton2">Calculate Probability and Cumulative Probability of the Total Durations</button>
+    <div class="scrollable-table">
+        <table id="resultsTable2">
+            <caption><h2>Total Duration Value, Probability and Cumulative Probability</h2></caption>
+            <thead>
+            <tr>
+                <th>Total Duration
+                </th>
+                <th>Probability of occurrence
+                </th>
+                <th>Cumulative Probability</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Results will be appended here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h3 class="tab">Step 5: Plot the probability and cumulative probability distribution of the total duration</h3>
+<p class="tab2">Combine the data in the table above, take the grouped data as the X-axis, and the values of the
+    probability of occurrence and cumulative probability as the Y-axis, and plot the probability and cumulative
+    probability distribution of the total duration of the project. The red bar is the probability that the whole project
+    will be completed in exactly how many days, and the blue line is the probability that the whole project will be
+    completed in how many days, which is the result of Monte Carlo simulation.
+</p>
+
+<p class="tab2">
+    Experimental manipulation: Plot the probability and cumulative probability distributions for the total duration of
+    the project.
+</p>
+<div>
+    <button id="generateChart">Generate Chart</button>
+    <caption><h2>Total duration probability, cumulative probability distribution</h2></caption>
+    <canvas id="myChart"></canvas>
+</div>
+
+<h3 class="tab">Step 6: Rationalise project schedule planning</h3>
+<p class="tab2">Using a cumulative probability distribution graph, you can derive the probability that the project will
+    be completed on time when the project schedule is planned for x days. (1) Assuming a minimum allowable 30% risk of
+    not completing on time, derive the number of days the project should be planned for. (2) Assuming a minimum
+    allowable 15% risk of not completing on time, find the number of days the project should be planned to complete.
+</p>
+
+<p class="tab2">
+    Experiment: Calculate project schedule planning.
+</p>
+
 <div class="btn-container">
     <a href="/" class="btn">Go back to Index</a>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <script>
     $(document).ready(function () {
         $('#submitDataBtn').click(function () {
@@ -324,7 +376,7 @@
                 }
             });
 
-            var globalData = [];
+            var globalSimulationData = [];
             var resultsPerPage = 25;
             var totalPages = 0;
 
@@ -335,18 +387,18 @@
                     type: 'GET',
                     dataType: 'json',  // Expecting JSON data in response
                     success: function (response) {
-                        globalData = response.data;
+                        globalSimulationData = response.data;
                         displayResults(1);  // Assume this function correctly handles your data
                         displaySummary(response.minDuration, response.maxDuration);
                     },
                     error: function (xhr, status, error) {
-                        alert('Error fetching simulation data: ' + error);
+                        alert('Input data error, please check saved data  ' + error);
                     }
                 });
             });
 
             function displayResults(page) {
-                var pageData = paginateData(globalData, page, resultsPerPage);
+                var pageData = paginateData(globalSimulationData, page, resultsPerPage);
                 renderTable(pageData); // Render the current page's data
                 renderPagination(page, totalPages); // Render pagination buttons
             }
@@ -383,6 +435,108 @@
                 $('#minDuration').text(minDuration);
                 $('#maxDuration').text(maxDuration);
             }
+
+            var globalPercentagesData = [];
+
+            $('#simulateButton2').click(function () {
+                $.ajax({
+                    url: '/calculateProbabilities',
+                    type: 'GET',
+                    dataType: 'json',  // Expecting JSON data in response
+                    success: function (response) {
+                        globalPercentagesData = response;
+                        renderTable2(response);  // Assume this function correctly handles your data
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error fetching calculation data: ' + error);
+                    }
+                });
+            });
+
+            function renderTable2(data) {
+                $('#resultsTable2 tbody').empty(); // Clear previous results
+                data.forEach(function (row) {
+                    var html = `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}`;
+                    $('#resultsTable2 tbody').append(html);
+                });
+            }
+
+            let myChart; // Declare this outside the function to have wider scope
+
+            $('#generateChart').click(function () {
+                if (typeof globalPercentagesData !== 'undefined' && globalPercentagesData.length > 0) {
+                    renderChart(globalPercentagesData);
+                } else {
+                    console.error('Data is not available.');
+                }
+            });
+
+            function renderChart(data) {
+                const ctx = document.getElementById('myChart').getContext('2d');
+
+                // Destroy existing chart if it exists
+                if (myChart) {
+                    myChart.destroy();
+                }
+
+                const labels = data.map(row => row[0]);
+                const probabilityData = data.map(row => row[1]);
+                const cumulativeProbabilityData = data.map(row => row[2]);
+
+                const chartData = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Probability',
+                            backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                            borderColor: 'rgb(0, 123, 255)',
+                            data: probabilityData,
+                            type: 'bar'
+                        },
+                        {
+                            label: 'Cumulative Probability',
+                            backgroundColor: 'rgba(40, 167, 69, 0.5)',
+                            borderColor: 'rgb(40, 167, 69)',
+                            data: cumulativeProbabilityData,
+                            type: 'line',
+                            yAxisID: 'y1'
+                        }
+                    ]
+                };
+
+                const chartOptions = {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 1, // This suggests to Chart.js to end at 1, but it's not strict
+                            ticks: {
+                                min: 0,
+                                max: 1
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+                            suggestedMax: 1,
+                            ticks: {
+                                min: 0,
+                                max: 1
+                            }
+                        }
+                    }
+                };
+
+                // Create a new chart instance
+                myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: chartData,
+                    options: chartOptions
+                });
+            }
+
+
         });
     });
 </script>

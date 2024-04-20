@@ -29,4 +29,9 @@ public class RestController {
         response.put("maxDuration", monteCarloController.getMaxDuration());
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/calculateProbabilities")
+    public float[][] calculateProbabilities() {
+        return monteCarloController.obtainResultsPercentages();
+    }
 }

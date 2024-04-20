@@ -4,16 +4,20 @@ import com.example.riskanalysissoftwareprototype.MonteCarloItems.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class MonteCarloController {
 
     private static MonteCarloController instance = null;
     private IMonteCarloSimulation design;
     private IMonteCarloSimulation development;
     private IMonteCarloSimulation testing;
-
+    private static final int simulationIterations = 400;
     private int[][] simulation;
     private int maxDuration;
     private int minDuration;
+    private float[][] percentages;
 
     private MonteCarloController() {
 
@@ -40,7 +44,7 @@ public class MonteCarloController {
     public int[][] doSimulation() {
         minDuration = Integer.MAX_VALUE;
         maxDuration = Integer.MIN_VALUE;
-        cleanSimulationArray();
+        simulation = new int[simulationIterations][4];
         for (int i = 0; i < simulation.length; i++) {
             int total = 0;
             simulation[i][0] = design.doDistribution();
@@ -66,12 +70,14 @@ public class MonteCarloController {
         return minDuration;
     }
 
-    //SUPPORT METHODS
-
-    private void cleanSimulationArray() {
-        simulation = new int[400][4];
+    public float[][] obtainResultsPercentages() {
+        initializePercentagesArray();
+        countResultRepetitions();
+        calculateResultPercentages();
+        return percentages;
     }
 
+    //SUPPORT METHODS
     private IMonteCarloSimulation parseDistributions(JSONObject data) {
         int opt = Integer.parseInt(data.getString("optimistic"));
         int lik = Integer.parseInt(data.getString("likely"));
@@ -84,6 +90,35 @@ public class MonteCarloController {
             case "Even" -> new EvenSimulation(opt, lik, pes, mea, dev);
             default -> throw new JSONException("Data Failure");
         };
+    }
+
+    private void initializePercentagesArray() {
+        percentages = new float[maxDuration - minDuration + 1][3];
+        for (int i = 0; i < percentages.length; i++) {
+            percentages[i][0] = minDuration + i;
+            percentages[i][1] = 0;
+        }
+    }
+
+    private void countResultRepetitions() {
+        initializePercentagesArray();
+        for (int i = 0; i < simulation.length; i++) {
+            int simulationResult = simulation[i][3];
+            percentages[simulationResult - minDuration][1] += 1;
+        }
+    }
+
+    private void calculateResultPercentages() {
+        float cumulativeProbability = 0;
+        for (int i = 0; i < percentages.length; i++) {
+            percentages[i][1] = percentages[i][1] / simulationIterations;
+            cumulativeProbability += percentages[i][1];
+            percentages[i][2] = round(cumulativeProbability, 3);
+        }
+    }
+
+    private float round(float d, int decimalPlace) {
+        return BigDecimal.valueOf(d).setScale(decimalPlace, RoundingMode.HALF_UP).floatValue();
     }
 
 }
