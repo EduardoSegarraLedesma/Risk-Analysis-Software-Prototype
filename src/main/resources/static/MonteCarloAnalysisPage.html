@@ -78,6 +78,14 @@
             background-color: #0056b3;
         }
 
+        .centered-text {
+            text-align: center;
+        }
+
+        .total-value {
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
@@ -261,8 +269,8 @@
         <!-- Pagination buttons will be appended here -->
     </div>
     <div>
-        <p>Minimum Total Duration: <span id="minDuration"></span></p>
-        <p>Maximum Total Duration: <span id="maxDuration"></span></p>
+        <p class="total-value">Minimum Total Duration: <span id="minDuration"></span></p>
+        <p class="total-value">Maximum Total Duration: <span id="maxDuration"></span></p>
     </div>
 </div>
 
@@ -310,7 +318,7 @@
 </p>
 <div>
     <button id="generateChart">Generate Chart</button>
-    <caption><h2>Total duration probability, cumulative probability distribution</h2></caption>
+    <caption><h2 class="centered-text">Total Duration Probability and Cumulative Probability Distribution</h2></caption>
     <canvas id="myChart"></canvas>
 </div>
 
@@ -324,6 +332,16 @@
 <p class="tab2">
     Experiment: Calculate project schedule planning.
 </p>
+
+<h1>V. Experimental results</h1>
+
+<div>
+    <p class="tab">Minimum allowable 30% risk of not completing the project on time is allowed and the project is planned to be
+        completed within <span id="daysFor30Risk" class="total-value">X</span> days.</p>
+    <p class="tab">Minimum allowable 15% risk of not completing the project on time is allowed and the project is planned to be
+        completed within <span id="daysFor15Risk" class="total-value">X</span> days.</p>
+    <button id="fetchDeadlineData">Calculate Project Deadlines</button>
+</div>
 
 <div class="btn-container">
     <a href="/" class="btn">Go back to Index</a>
@@ -536,6 +554,22 @@
                 });
             }
 
+            $('#fetchDeadlineData').click(function () {
+                $.ajax({
+                    url: '/getDeadlineData',  // Adjust this URL to your backend endpoint
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        // Assuming the response returns an object with days30 and days15 properties
+                        $('#daysFor30Risk').text(response.risk30);
+                        $('#daysFor15Risk').text(response.risk15);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Failed to fetch data:', error);
+                        alert('Failed to retrieve project deadlines. Please try again later.');
+                    }
+                });
+            });
 
         });
     });

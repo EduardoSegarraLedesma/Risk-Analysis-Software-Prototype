@@ -34,4 +34,12 @@ public class RestController {
     public float[][] calculateProbabilities() {
         return monteCarloController.obtainResultsPercentages();
     }
+
+    @GetMapping("/getDeadlineData")
+    public ResponseEntity<?> getDeadlineData() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("risk30", monteCarloController.getDaysAccordingToRisk(30));
+        response.put("risk15", monteCarloController.getDaysAccordingToRisk(15));
+        return ResponseEntity.ok(response);
+    }
 }

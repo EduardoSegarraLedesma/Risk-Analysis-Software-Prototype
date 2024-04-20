@@ -77,6 +77,13 @@ public class MonteCarloController {
         return percentages;
     }
 
+    public int getDaysAccordingToRisk(int risk) {
+        for (int i = 0; i < percentages.length; i++)
+            if (percentages[i][2] >= (1f - ((float) risk / 100f)))
+                return (int) percentages[i][0];
+        return -1;
+    }
+
     //SUPPORT METHODS
     private IMonteCarloSimulation parseDistributions(JSONObject data) {
         int opt = Integer.parseInt(data.getString("optimistic"));
