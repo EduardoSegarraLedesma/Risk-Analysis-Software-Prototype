@@ -2,25 +2,23 @@ package com.example.riskanalysissoftwareprototype.controllers;
 
 import com.example.riskanalysissoftwareprototype.MonteCarloItems.*;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.SQLException;
 
 public class MonteCarloController {
-
-    private static MonteCarloController instance = null;
-    private IMonteCarloSimulation design;
-    private IMonteCarloSimulation development;
-    private IMonteCarloSimulation testing;
     private static final int simulationIterations = 400;
+    private static MonteCarloController instance = null;
+    private PersistenceController persistenceController;
+    private WorkSchedule schedule;
     private int[][] simulation;
     private int maxDuration;
     private int minDuration;
     private float[][] percentages;
 
     private MonteCarloController() {
-
+        persistenceController = PersistenceController.getInstance();
     }
 
     public static MonteCarloController getInstance() {
@@ -29,16 +27,23 @@ public class MonteCarloController {
         return instance;
     }
 
-    public String ParseData(String data) {
+    public String saveData(String data) {
         try {
-            JSONObject jsonData = new JSONObject(data);
-            this.design = parseDistributions(jsonData.getJSONObject("design"));
-            this.development = parseDistributions(jsonData.getJSONObject("development"));
-            this.testing = parseDistributions(jsonData.getJSONObject("testing"));
+            schedule = new WorkSchedule(data);
+            try {
+                persistenceController.saveProject(schedule);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return "Database Conexion Error";
+            }
             return "Saved";
         } catch (JSONException e) {
             return "Error in input data";
         }
+    }
+
+    public void setData(WorkSchedule data) {
+        schedule = data;
     }
 
     public int[][] doSimulation() {
@@ -47,11 +52,11 @@ public class MonteCarloController {
         simulation = new int[simulationIterations][4];
         for (int i = 0; i < simulation.length; i++) {
             int total = 0;
-            simulation[i][0] = design.doDistribution();
+            simulation[i][0] = schedule.getDesign().doDistribution();
             total += simulation[i][0];
-            simulation[i][1] = development.doDistribution();
+            simulation[i][1] = schedule.getDevelopment().doDistribution();
             total += simulation[i][1];
-            simulation[i][2] = testing.doDistribution();
+            simulation[i][2] = schedule.getTesting().doDistribution();
             total += simulation[i][2];
             simulation[i][3] = total;
             if (total > maxDuration)
@@ -85,20 +90,6 @@ public class MonteCarloController {
     }
 
     //SUPPORT METHODS
-    private IMonteCarloSimulation parseDistributions(JSONObject data) {
-        int opt = Integer.parseInt(data.getString("optimistic"));
-        int lik = Integer.parseInt(data.getString("likely"));
-        int pes = Integer.parseInt(data.getString("pessimistic"));
-        int mea = Integer.parseInt(data.getString("mean"));
-        int dev = Integer.parseInt(data.getString("stdDeviation"));
-        return switch (data.getString("distribution")) {
-            case "Normal" -> new NormalSimulation(opt, lik, pes, mea, dev);
-            case "Triangular" -> new TriangularSimulation(opt, lik, pes, mea, dev);
-            case "Even" -> new EvenSimulation(opt, lik, pes, mea, dev);
-            default -> throw new JSONException("Data Failure");
-        };
-    }
-
     private void initializePercentagesArray() {
         percentages = new float[maxDuration - minDuration + 1][3];
         for (int i = 0; i < percentages.length; i++) {

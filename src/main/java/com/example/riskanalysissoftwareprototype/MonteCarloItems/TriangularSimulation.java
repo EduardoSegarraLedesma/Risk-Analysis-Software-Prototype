@@ -4,7 +4,7 @@ import org.apache.commons.math3.distribution.TriangularDistribution;
 
 public class TriangularSimulation extends MonteCarloSimulation implements IMonteCarloSimulation {
     public TriangularSimulation(int mOptimistic, int mLikely, int mPessimistic, int mDuration, int sDeviation) {
-        super(mOptimistic, mLikely, mPessimistic, mDuration, sDeviation);
+        super(mOptimistic, mLikely, mPessimistic, mDuration, sDeviation, "Triangular");
     }
 
     @Override

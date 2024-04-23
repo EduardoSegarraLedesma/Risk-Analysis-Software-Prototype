@@ -4,7 +4,7 @@ import org.apache.commons.math3.distribution.LogNormalDistribution;
 
 public class NormalSimulation extends MonteCarloSimulation implements IMonteCarloSimulation {
     public NormalSimulation(int mOptimistic, int mLikely, int mPessimistic, int mDuration, int sDeviation) {
-        super(mOptimistic, mLikely, mPessimistic, mDuration, sDeviation);
+        super(mOptimistic, mLikely, mPessimistic, mDuration, sDeviation, "Normal");
     }
 
     @Override

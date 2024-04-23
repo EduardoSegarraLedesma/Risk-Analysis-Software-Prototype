@@ -154,7 +154,10 @@
     Note: For the distributions to work properly the next needs to be followed
 </p>
 <p class="tab2">
-    * Most Optimistic ≤ Most Likely ≤ Most Pessimistic
+    * Most Optimistic < Most Pessimistic
+</p>
+<p class="tab2">
+    * Most Optimistic ≤ Most Likely / * Most Likely ≤ Most Pessimistic
 </p>
 <p class="tab2">
     * Mean Duration > 0
@@ -163,7 +166,24 @@
     * Standard Deviation > 0
 </p>
 <div class="section">
+
+    <label for="ProjectName">Project Name: </label>
+    <input type="text" id="ProjectName" name="projectname" placeholder="Enter the project name...">
+
     <button id="submitDataBtn" type="button">Save Data</button>
+    <button id="viewProjectsBtn" type="button">See All Saved Projects</button>
+    <table id="projectListTable" style="display:none;">
+        <caption><h2>Saved Projects</h2></caption>
+        <thead>
+        <tr>
+            <th>Project Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Projects will be listed here -->
+        </tbody>
+    </table>
     <table id="scheduleTable">
         <caption><h2>Estimated Schedule of Work</h2></caption>
         <tr>
@@ -361,9 +381,11 @@
 
 <script>
     $(document).ready(function () {
+
         $('#submitDataBtn').click(function () {
             // Gather data from your form inputs
             var data = {
+                name: $('#ProjectName').val(),
                 design: {
                     optimistic: $('#DesignOpt').val(),
                     likely: $('#DesignLik').val(),
@@ -405,184 +427,277 @@
                     alert('Failed to save data. \n Error: ' + error);  // Alert the user on error
                 }
             });
+        });
 
-            var globalSimulationData = [];
-            var resultsPerPage = 25;
-            var totalPages = 0;
+        $('#viewProjectsBtn').click(function () {
+            $.ajax({
+                url: '/getProjects',
+                type: 'GET',
+                dataType: 'json',  // Ensure the data type expected is JSON
+                success: function (response) {
+                    const table = $('#projectListTable tbody');
+                    table.empty(); // Clear existing entries
+                    if (response.message) {
+                        alert(response.message);  // Handle potential error messages
+                    } else {
+                        response.forEach(function (project) {
+                            const row = $('<tr>').append(
+                                $('<td>').text(project),
+                                $('<td>').append(
+                                    $('<button>').text('Delete').click(function () {
+                                        deleteProject(project);
+                                    }),
+                                    $('<button>').text('Retrieve').click(function () {
+                                        retrieveProject(project);
+                                    })
+                                )
+                            );
+                            table.append(row);
+                        });
+                        $('#projectListTable').show();
+                    }
+                },
+                error: function () {
+                    alert('Failed to retrieve projects.');
+                }
+            });
+        });
 
+        function deleteProject(projectName) {
+            $.ajax({
+                url: '/deleteProject',
+                type: 'POST',
+                contentType: 'application/json',
+                data: projectName,
+                success: function (response) {
+                    $('#viewProjectsBtn').click();
+                    alert('Project deleted successfully: ' + response.message);
+                },
+                error: function (xhr) {
+                    alert('Error deleting project: ' + xhr.responseText);
+                }
+            });
+        }
 
-            $('#simulateButton').click(function () {
-                $.ajax({
-                    url: '/simulateMonteCarlo',
-                    type: 'GET',
-                    dataType: 'json',  // Expecting JSON data in response
-                    success: function (response) {
-                        globalSimulationData = response.data;
-                        displayResults(1);  // Assume this function correctly handles your data
-                        displaySummary(response.minDuration, response.maxDuration);
+        function retrieveProject(projectName) {
+            $.ajax({
+                url: '/retrieveSchedule',
+                type: 'GET',
+                data: {projectName: projectName},
+                dataType: 'json',
+                success: function (response) {
+                    console.log($('#ProjectName').length);
+                    alert('Project data retrieved successfully.');
+
+                    $('#ProjectName').val(response.name);
+
+                    // Populating the fields for Design phase
+                    $('#DesignOpt').val(response.design.optimistic);
+                    $('#DesignLik').val(response.design.likely);
+                    $('#DesignPes').val(response.design.pessimistic);
+                    $('#DesignMea').val(response.design.mean);
+                    $('#DesignDev').val(response.design.stdDeviation);
+                    $('#DesignDis').val(response.design.distribution);
+
+                    // Populating the fields for Development phase
+                    $('#DevelopmentOpt').val(response.development.optimistic);
+                    $('#DevelopmentLik').val(response.development.likely);
+                    $('#DevelopmentPes').val(response.development.pessimistic);
+                    $('#DevelopmentMea').val(response.development.mean);
+                    $('#DevelopmentDev').val(response.development.stdDeviation);
+                    $('#DevelopmentDis').val(response.development.distribution);
+
+                    // Populating the fields for Testing phase
+                    $('#TestingOpt').val(response.testing.optimistic);
+                    $('#TestingLik').val(response.testing.likely);
+                    $('#TestingPes').val(response.testing.pessimistic);
+                    $('#TestingMea').val(response.testing.mean);
+                    $('#TestingDev').val(response.testing.stdDeviation);
+                    $('#TestingDis').val(response.testing.distribution);
+
+                    // Hiding the projects list table after filling the form fields
+                    $('#projectListTable').hide();
+                },
+                error: function (xhr, status, error) {
+                    alert('Failed to retrieve project data: ' + xhr.statusText);
+                }
+            });
+        }
+
+        var globalSimulationData = [];
+        var resultsPerPage = 25;
+        var totalPages = 0;
+
+        $('#simulateButton').click(function () {
+            $.ajax({
+                url: '/simulateMonteCarlo',
+                type: 'GET',
+                dataType: 'json',  // Expecting JSON data in response
+                success: function (response) {
+                    globalSimulationData = response.data;
+                    displayResults(1);  // Assume this function correctly handles your data
+                    displaySummary(response.minDuration, response.maxDuration);
+                },
+                error: function (xhr, status, error) {
+                    alert('Input data error, please check saved data  ' + error);
+                }
+            });
+        });
+
+        function displayResults(page) {
+            var pageData = paginateData(globalSimulationData, page, resultsPerPage);
+            renderTable(pageData); // Render the current page's data
+            renderPagination(page, totalPages); // Render pagination buttons
+        }
+
+        function paginateData(data, page, perPage) {
+            var offset = (page - 1) * perPage;
+            totalPages = Math.ceil(data.length / perPage); // Recalculate total pages every call
+            return data.slice(offset, offset + perPage);
+        }
+
+        function renderTable(data) {
+            $('#resultsTable tbody').empty(); // Clear previous results
+            data.forEach(function (row) {
+                var html = `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td></tr>`;
+                $('#resultsTable tbody').append(html);
+            });
+        }
+
+        function renderPagination(currentPage, numPages) {
+            $('#pagination').empty(); // Clear existing pagination buttons
+            for (let i = 1; i <= numPages; i++) {
+                const button = $('<button>').text(i);
+                if (i === currentPage) {
+                    button.prop('disabled', true); // Disable current page button
+                }
+                button.on('click', function () {
+                    displayResults(i);
+                });
+                $('#pagination').append(button);
+            }
+        }
+
+        function displaySummary(minDuration, maxDuration) {
+            $('#minDuration').text(minDuration);
+            $('#maxDuration').text(maxDuration);
+        }
+
+        var globalPercentagesData = [];
+
+        $('#simulateButton2').click(function () {
+            $.ajax({
+                url: '/calculateProbabilities',
+                type: 'GET',
+                dataType: 'json',  // Expecting JSON data in response
+                success: function (response) {
+                    globalPercentagesData = response;
+                    renderTable2(response);  // Assume this function correctly handles your data
+                },
+                error: function (xhr, status, error) {
+                    alert('Error fetching calculation data: ' + error);
+                }
+            });
+        });
+
+        function renderTable2(data) {
+            $('#resultsTable2 tbody').empty(); // Clear previous results
+            data.forEach(function (row) {
+                var html = `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}`;
+                $('#resultsTable2 tbody').append(html);
+            });
+        }
+
+        let myChart; // Declare this outside the function to have wider scope
+
+        $('#generateChart').click(function () {
+            if (typeof globalPercentagesData !== 'undefined' && globalPercentagesData.length > 0) {
+                renderChart(globalPercentagesData);
+            } else {
+                console.error('Data is not available.');
+            }
+        });
+
+        function renderChart(data) {
+            const ctx = document.getElementById('myChart').getContext('2d');
+
+            // Destroy existing chart if it exists
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            const labels = data.map(row => row[0]);
+            const probabilityData = data.map(row => row[1]);
+            const cumulativeProbabilityData = data.map(row => row[2]);
+
+            const chartData = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Probability',
+                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                        borderColor: 'rgb(0, 123, 255)',
+                        data: probabilityData,
+                        type: 'bar'
                     },
-                    error: function (xhr, status, error) {
-                        alert('Input data error, please check saved data  ' + error);
+                    {
+                        label: 'Cumulative Probability',
+                        backgroundColor: 'rgba(40, 167, 69, 0.5)',
+                        borderColor: 'rgb(40, 167, 69)',
+                        data: cumulativeProbabilityData,
+                        type: 'line',
+                        yAxisID: 'y1'
                     }
-                });
-            });
+                ]
+            };
 
-            function displayResults(page) {
-                var pageData = paginateData(globalSimulationData, page, resultsPerPage);
-                renderTable(pageData); // Render the current page's data
-                renderPagination(page, totalPages); // Render pagination buttons
-            }
-
-            function paginateData(data, page, perPage) {
-                var offset = (page - 1) * perPage;
-                totalPages = Math.ceil(data.length / perPage); // Recalculate total pages every call
-                return data.slice(offset, offset + perPage);
-            }
-
-            function renderTable(data) {
-                $('#resultsTable tbody').empty(); // Clear previous results
-                data.forEach(function (row) {
-                    var html = `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td></tr>`;
-                    $('#resultsTable tbody').append(html);
-                });
-            }
-
-            function renderPagination(currentPage, numPages) {
-                $('#pagination').empty(); // Clear existing pagination buttons
-                for (let i = 1; i <= numPages; i++) {
-                    const button = $('<button>').text(i);
-                    if (i === currentPage) {
-                        button.prop('disabled', true); // Disable current page button
-                    }
-                    button.on('click', function () {
-                        displayResults(i);
-                    });
-                    $('#pagination').append(button);
-                }
-            }
-
-            function displaySummary(minDuration, maxDuration) {
-                $('#minDuration').text(minDuration);
-                $('#maxDuration').text(maxDuration);
-            }
-
-            var globalPercentagesData = [];
-
-            $('#simulateButton2').click(function () {
-                $.ajax({
-                    url: '/calculateProbabilities',
-                    type: 'GET',
-                    dataType: 'json',  // Expecting JSON data in response
-                    success: function (response) {
-                        globalPercentagesData = response;
-                        renderTable2(response);  // Assume this function correctly handles your data
-                    },
-                    error: function (xhr, status, error) {
-                        alert('Error fetching calculation data: ' + error);
-                    }
-                });
-            });
-
-            function renderTable2(data) {
-                $('#resultsTable2 tbody').empty(); // Clear previous results
-                data.forEach(function (row) {
-                    var html = `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}`;
-                    $('#resultsTable2 tbody').append(html);
-                });
-            }
-
-            let myChart; // Declare this outside the function to have wider scope
-
-            $('#generateChart').click(function () {
-                if (typeof globalPercentagesData !== 'undefined' && globalPercentagesData.length > 0) {
-                    renderChart(globalPercentagesData);
-                } else {
-                    console.error('Data is not available.');
-                }
-            });
-
-            function renderChart(data) {
-                const ctx = document.getElementById('myChart').getContext('2d');
-
-                // Destroy existing chart if it exists
-                if (myChart) {
-                    myChart.destroy();
-                }
-
-                const labels = data.map(row => row[0]);
-                const probabilityData = data.map(row => row[1]);
-                const cumulativeProbabilityData = data.map(row => row[2]);
-
-                const chartData = {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Probability',
-                            backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                            borderColor: 'rgb(0, 123, 255)',
-                            data: probabilityData,
-                            type: 'bar'
-                        },
-                        {
-                            label: 'Cumulative Probability',
-                            backgroundColor: 'rgba(40, 167, 69, 0.5)',
-                            borderColor: 'rgb(40, 167, 69)',
-                            data: cumulativeProbabilityData,
-                            type: 'line',
-                            yAxisID: 'y1'
+            const chartOptions = {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 1, // This suggests to Chart.js to end at 1, but it's not strict
+                        ticks: {
+                            min: 0,
+                            max: 1
                         }
-                    ]
-                };
-
-                const chartOptions = {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            suggestedMax: 1, // This suggests to Chart.js to end at 1, but it's not strict
-                            ticks: {
-                                min: 0,
-                                max: 1
-                            }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            beginAtZero: true,
-                            suggestedMax: 1,
-                            ticks: {
-                                min: 0,
-                                max: 1
-                            }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        beginAtZero: true,
+                        suggestedMax: 1,
+                        ticks: {
+                            min: 0,
+                            max: 1
                         }
                     }
-                };
+                }
+            };
 
-                // Create a new chart instance
-                myChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: chartData,
-                    options: chartOptions
-                });
-            }
-
-            $('#fetchDeadlineData').click(function () {
-                $.ajax({
-                    url: '/getDeadlineData',  // Adjust this URL to your backend endpoint
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (response) {
-                        // Assuming the response returns an object with days30 and days15 properties
-                        $('#daysFor30Risk').text(response.risk30);
-                        $('#daysFor15Risk').text(response.risk15);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Failed to fetch data:', error);
-                        alert('Failed to retrieve project deadlines. Please try again later.');
-                    }
-                });
+            // Create a new chart instance
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: chartOptions
             });
+        }
 
+        $('#fetchDeadlineData').click(function () {
+            $.ajax({
+                url: '/getDeadlineData',  // Adjust this URL to your backend endpoint
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    // Assuming the response returns an object with days30 and days15 properties
+                    $('#daysFor30Risk').text(response.risk30);
+                    $('#daysFor15Risk').text(response.risk15);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Failed to fetch data:', error);
+                    alert('Failed to retrieve project deadlines. Please try again later.');
+                }
+            });
         });
     });
 </script>

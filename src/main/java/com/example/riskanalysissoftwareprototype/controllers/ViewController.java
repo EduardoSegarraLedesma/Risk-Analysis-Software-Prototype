@@ -25,5 +25,10 @@ public class ViewController {
         return "MonteCarloAnalysisPage.html";
     }
 
+    @GetMapping("/monteCarloHistory")
+    public String showMonteCarloistoryPage() {
+        return "MonteCarloHistoryPage.html";
+    }
+
 
 }
