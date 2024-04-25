@@ -31,7 +31,7 @@ public class RestController {
             return ResponseEntity.ok(persistenceController.retrieveAllProjectNames());
         } catch (SQLException e) {
             return ResponseEntity.ok(new HashMap<String, Object>() {{
-                put("message", "error loading projects");
+                put("message", "couldn't load projects");
             }});
         }
     }
@@ -44,7 +44,7 @@ public class RestController {
             return ResponseEntity.ok(schedule.getJSONschedule());
         } catch (SQLException e) {
             return ResponseEntity.ok(new HashMap<String, Object>() {{
-                put("message", "error retrieving schedule");
+                put("message", "couldn't retrieving schedule");
             }});
         }
     }
@@ -59,7 +59,7 @@ public class RestController {
         } catch (SQLException e) {
             e.printStackTrace();
             return ResponseEntity.ok(new HashMap<String, Object>() {{
-                put("message", "error deleting projects");
+                put("message", "Couldn't delete project");
             }});
         }
     }

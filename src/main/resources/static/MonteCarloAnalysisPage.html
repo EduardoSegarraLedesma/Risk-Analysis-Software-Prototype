@@ -172,6 +172,7 @@
 
     <button id="submitDataBtn" type="button">Save Data</button>
     <button id="viewProjectsBtn" type="button">See All Saved Projects</button>
+    <button id="closeViewProjectsBtn" type="button" style="display: none">Close</button>
     <table id="projectListTable" style="display:none;">
         <caption><h2>Saved Projects</h2></caption>
         <thead>
@@ -420,11 +421,10 @@
                 data: JSON.stringify(data),
                 success: function (response) {
                     console.log('Data submitted successfully:', response);
-                    alert('Success: ' + response.message);  // Display success message from the server
                 },
                 error: function (xhr, status, error) {
                     console.error('An error occurred:', error);
-                    alert('Failed to save data. \n Error: ' + error);  // Alert the user on error
+                    alert('Error: ' + error);  // Alert the user on error
                 }
             });
         });
@@ -435,6 +435,7 @@
                 type: 'GET',
                 dataType: 'json',  // Ensure the data type expected is JSON
                 success: function (response) {
+                    $('#closeViewProjectsBtn').show();
                     const table = $('#projectListTable tbody');
                     table.empty(); // Clear existing entries
                     if (response.message) {
@@ -471,10 +472,10 @@
                 data: projectName,
                 success: function (response) {
                     $('#viewProjectsBtn').click();
-                    alert('Project deleted successfully: ' + response.message);
+
                 },
                 error: function (xhr) {
-                    alert('Error deleting project: ' + xhr.responseText);
+                    alert('Error: ' + xhr.responseText);
                 }
             });
         }
@@ -487,8 +488,6 @@
                 dataType: 'json',
                 success: function (response) {
                     console.log($('#ProjectName').length);
-                    alert('Project data retrieved successfully.');
-
                     $('#ProjectName').val(response.name);
 
                     // Populating the fields for Design phase
@@ -517,12 +516,18 @@
 
                     // Hiding the projects list table after filling the form fields
                     $('#projectListTable').hide();
+                    $('#closeViewProjectsBtn').hide();
                 },
                 error: function (xhr, status, error) {
-                    alert('Failed to retrieve project data: ' + xhr.statusText);
+                    alert('Error: ' + xhr.statusText);
                 }
             });
         }
+
+        $('#closeViewProjectsBtn').click(function () {
+            $('#projectListTable').hide();
+            $('#closeViewProjectsBtn').hide();
+        });
 
         var globalSimulationData = [];
         var resultsPerPage = 25;
@@ -539,7 +544,7 @@
                     displaySummary(response.minDuration, response.maxDuration);
                 },
                 error: function (xhr, status, error) {
-                    alert('Input data error, please check saved data  ' + error);
+                    alert('Error: ' + error);
                 }
             });
         });
@@ -595,7 +600,7 @@
                     renderTable2(response);  // Assume this function correctly handles your data
                 },
                 error: function (xhr, status, error) {
-                    alert('Error fetching calculation data: ' + error);
+                    alert('Error: ' + error);
                 }
             });
         });

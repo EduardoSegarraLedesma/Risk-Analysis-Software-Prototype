@@ -38,7 +38,7 @@ public class MonteCarloController {
             }
             return "Saved";
         } catch (JSONException e) {
-            return "Error in input data";
+            return "Please, revise input data";
         }
     }
 
