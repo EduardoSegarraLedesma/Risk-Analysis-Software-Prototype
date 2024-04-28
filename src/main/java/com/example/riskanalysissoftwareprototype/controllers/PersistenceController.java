@@ -35,7 +35,7 @@ public class PersistenceController {
                     "INSERT INTO Projects VALUES (?)");
             statement.setString(1, project.getProjectName());
             statement.execute();
-            saveSchedule(project, statement);
+            saveSchedule(project);
             close(statement);
         }
     }
@@ -72,7 +72,7 @@ public class PersistenceController {
         statement.setString(1, project.getProjectName());
         statement.setInt(2, projectID);
         statement.executeUpdate();
-        updateSchedule(project, projectID, statement);
+        updateSchedule(project, projectID);
         close(statement);
     }
 
@@ -117,15 +117,15 @@ public class PersistenceController {
         return projectID;
     }
 
-    private void saveSchedule(WorkSchedule schedule, PreparedStatement statement) throws SQLException {
+    private void saveSchedule(WorkSchedule schedule) throws SQLException {
         int projectID = getProjectID(schedule.getProjectName());
-        savePhase(projectID, schedule.getDesign(), "Design", statement);
-        savePhase(projectID, schedule.getDevelopment(), "Development", statement);
-        savePhase(projectID, schedule.getTesting(), "Testing", statement);
+        savePhase(projectID, schedule.getDesign(), "Design");
+        savePhase(projectID, schedule.getDevelopment(), "Development");
+        savePhase(projectID, schedule.getTesting(), "Testing");
     }
 
-    private void savePhase(int projectID, IMonteCarloSimulation phase, String phaseName, PreparedStatement statement) throws SQLException {
-        statement = connection.prepareStatement(
+    private void savePhase(int projectID, IMonteCarloSimulation phase, String phaseName) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO Schedules VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         statement.setInt(1, projectID);
         statement.setString(2, phaseName);
@@ -147,7 +147,7 @@ public class PersistenceController {
         ObjectNode developmentNode = rootNode.putObject("development");
         ObjectNode testingNode = rootNode.putObject("testing");
         while (result.next()) {
-            String phase = result.getString("Phase");  // Assuming there's a Phase column to differentiate
+            String phase = result.getString("Phase");
             String optimistic = String.valueOf(result.getInt("OptimisticDuration"));
             String likely = String.valueOf(result.getInt("LikelyDuration"));
             String pessimistic = String.valueOf(result.getInt("PessimisticDuration"));
@@ -174,14 +174,14 @@ public class PersistenceController {
         }
     }
 
-    private void updateSchedule(WorkSchedule schedule, int projectID, PreparedStatement statement) throws SQLException {
-        updatePhase(projectID, schedule.getDesign(), "Design", statement);
-        updatePhase(projectID, schedule.getDevelopment(), "Development", statement);
-        updatePhase(projectID, schedule.getTesting(), "Testing", statement);
+    private void updateSchedule(WorkSchedule schedule, int projectID) throws SQLException {
+        updatePhase(projectID, schedule.getDesign(), "Design");
+        updatePhase(projectID, schedule.getDevelopment(), "Development");
+        updatePhase(projectID, schedule.getTesting(), "Testing");
     }
 
-    private void updatePhase(int projectID, IMonteCarloSimulation phase, String phaseName, PreparedStatement statement) throws SQLException {
-        statement = connection.prepareStatement(
+    private void updatePhase(int projectID, IMonteCarloSimulation phase, String phaseName) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(
                 "UPDATE Schedules SET OptimisticDuration = ?, LikelyDuration = ?, PessimisticDuration = ?, " +
                         "MeanDuration  = ?, StandardDeviation  = ?, DistributionType = ? " +
                         "WHERE ProjectID = ? AND Phase = ?");
