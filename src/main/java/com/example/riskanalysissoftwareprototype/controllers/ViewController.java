@@ -22,6 +22,6 @@ public class ViewController {
 
     @GetMapping("/monteCarlo")
     public String showMonteCarloAnalysisPage() {
-        return "MonteCarloAnalysis.html";
+        return "MonteCarloAnalysisPage.html";
     }
 }
