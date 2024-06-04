@@ -26,17 +26,17 @@ public class PersistenceController {
     }
 
     public void saveProject(WorkSchedule project) throws SQLException {
-        int projectID = getProjectID(project.getProjectName());
+        Connection connection = RiskAnalysisDB().getConnection();
+        int projectID = getProjectID(connection, project.getProjectName());
         if (projectID != -1) {
-            updateProject(project, projectID);
+            updateProject(connection, project, projectID);
         } else {
-            connection = RiskAnalysisDB().getConnection();
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO Projects VALUES (?)");
             statement.setString(1, project.getProjectName());
             statement.execute();
-            saveSchedule(project);
-            close(statement);
+            saveSchedule(connection, project);
+            connection.close();
         }
     }
 
@@ -49,42 +49,41 @@ public class PersistenceController {
         while (result.next()) {
             list.add(result.getString(1));
         }
+        connection.close();
         return list;
     }
 
     public WorkSchedule retrieveProjectSchedule(String projectName) throws SQLException {
-        int projectID = getProjectID(projectName);
         connection = RiskAnalysisDB().getConnection();
+        int projectID = getProjectID(connection, projectName);
         PreparedStatement statement = connection.prepareStatement(
                 "SELECT Phase, OptimisticDuration, LikelyDuration, PessimisticDuration, MeanDuration, " +
                         "StandardDeviation, DistributionType FROM Schedules WHERE projectID = ?");
         statement.setInt(1, projectID);
         ResultSet result = statement.executeQuery();
         WorkSchedule retrieved = new WorkSchedule(convertToJSON(projectName, result));
-        close(statement);
+        connection.close();
         return retrieved;
     }
 
-    private void updateProject(WorkSchedule project, int projectID) throws SQLException {
-        connection = RiskAnalysisDB().getConnection();
+    private void updateProject(Connection connection, WorkSchedule project, int projectID) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "UPDATE Projects SET ProjectName = ? WHERE ProjectID = ? ;");
         statement.setString(1, project.getProjectName());
         statement.setInt(2, projectID);
         statement.executeUpdate();
-        updateSchedule(project, projectID);
-        close(statement);
+        updateSchedule(connection, project, projectID);
     }
 
     public void deleteProject(String projectName) throws SQLException {
-        int projectID = getProjectID(projectName);
-        connection = RiskAnalysisDB().getConnection();
-        deleteSchedule(projectID);
+        Connection connection = RiskAnalysisDB().getConnection();
+        int projectID = getProjectID(connection, projectName);
+        deleteSchedule(connection, projectID);
         PreparedStatement statement = connection.prepareStatement(
                 "DELETE FROM Projects WHERE ProjectID = ?;");
         statement.setInt(1, projectID);
         statement.execute();
-        close(statement);
+        connection.close();
     }
 
 
@@ -98,14 +97,8 @@ public class PersistenceController {
         return dataSource;
     }
 
-    private void close(PreparedStatement statement) throws SQLException {
-        statement.close();
-        connection.close();
-    }
-
-    private int getProjectID(String projectName) throws SQLException {
+    private int getProjectID(Connection connection, String projectName) throws SQLException {
         int projectID;
-        connection = RiskAnalysisDB().getConnection();
         PreparedStatement statement = connection.prepareStatement(
                 "SELECT ProjectId FROM Projects WHERE ProjectName = ? ");
         statement.setString(1, projectName);
@@ -113,18 +106,17 @@ public class PersistenceController {
         if (result.next())
             projectID = result.getInt(1);
         else projectID = -1;
-        close(statement);
         return projectID;
     }
 
-    private void saveSchedule(WorkSchedule schedule) throws SQLException {
-        int projectID = getProjectID(schedule.getProjectName());
-        savePhase(projectID, schedule.getDesign(), "Design");
-        savePhase(projectID, schedule.getDevelopment(), "Development");
-        savePhase(projectID, schedule.getTesting(), "Testing");
+    private void saveSchedule(Connection connection, WorkSchedule schedule) throws SQLException {
+        int projectID = getProjectID(connection, schedule.getProjectName());
+        savePhase(connection, projectID, schedule.getDesign(), "Design");
+        savePhase(connection, projectID, schedule.getDevelopment(), "Development");
+        savePhase(connection, projectID, schedule.getTesting(), "Testing");
     }
 
-    private void savePhase(int projectID, IMonteCarloSimulation phase, String phaseName) throws SQLException {
+    private void savePhase(Connection connection, int projectID, IMonteCarloSimulation phase, String phaseName) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO Schedules VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         statement.setInt(1, projectID);
@@ -174,13 +166,13 @@ public class PersistenceController {
         }
     }
 
-    private void updateSchedule(WorkSchedule schedule, int projectID) throws SQLException {
-        updatePhase(projectID, schedule.getDesign(), "Design");
-        updatePhase(projectID, schedule.getDevelopment(), "Development");
-        updatePhase(projectID, schedule.getTesting(), "Testing");
+    private void updateSchedule(Connection connection, WorkSchedule schedule, int projectID) throws SQLException {
+        updatePhase(connection, projectID, schedule.getDesign(), "Design");
+        updatePhase(connection, projectID, schedule.getDevelopment(), "Development");
+        updatePhase(connection, projectID, schedule.getTesting(), "Testing");
     }
 
-    private void updatePhase(int projectID, IMonteCarloSimulation phase, String phaseName) throws SQLException {
+    private void updatePhase(Connection connection, int projectID, IMonteCarloSimulation phase, String phaseName) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "UPDATE Schedules SET OptimisticDuration = ?, LikelyDuration = ?, PessimisticDuration = ?, " +
                         "MeanDuration  = ?, StandardDeviation  = ?, DistributionType = ? " +
@@ -196,7 +188,7 @@ public class PersistenceController {
         statement.executeUpdate();
     }
 
-    private void deleteSchedule(int projectID) throws SQLException {
+    private void deleteSchedule(Connection connection, int projectID) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "DELETE FROM Schedules WHERE ProjectID = ?");
         statement.setInt(1, projectID);
