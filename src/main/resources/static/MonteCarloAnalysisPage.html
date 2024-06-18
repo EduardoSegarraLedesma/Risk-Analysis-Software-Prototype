@@ -389,9 +389,14 @@
     $(document).ready(function () {
 
         $('#submitDataBtn').click(function () {
+            var projectName = $('#ProjectName').val();
+            if (!projectName || projectName.trim().length === 0) {
+                alert("Project Name cannot be empty or start with a space character");
+                return; // Stop the function from continuing
+            }
             // Gather data from your form inputs
             var data = {
-                name: $('#ProjectName').val(),
+                name: projectName,
                 design: {
                     optimistic: $('#DesignOpt').val(),
                     likely: $('#DesignLik').val(),
